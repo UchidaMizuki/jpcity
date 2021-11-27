@@ -1,7 +1,7 @@
 #'
 #'
 #' @export
-subprefecture <- function(x,
+subprefecture <- function(x, date,
                           gun = TRUE,
                           shicho = TRUE,
                           shinkokyoku = TRUE) {
