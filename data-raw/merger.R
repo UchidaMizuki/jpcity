@@ -48,12 +48,28 @@ merger <- read_csv(str_glue("data-raw/merger/merger_{date_start}--{date_end}.csv
            str_split("\\n|(?<=編入)し、")) %>%
   unnest(merger)  %>%
 
+  add_row(date_merger = ymd("2006-03-01"),
+          city_code = "19201",
+          prefecture_name = "山梨県",
+          city_name = "甲府市",
+          city_name_kana = "こうふし",
+          merger = "上九一色村(19341)大字梯及び古関が甲府市(19201)に編入") %>%
+  add_row(date_merger = ymd("2006-03-01"),
+          city_code = "19341",
+          prefecture_name = "山梨県",
+          subprefecture_name = "西八代郡",
+          subprefecture_name_kana = "にしやつしろぐん",
+          city_name = "上九一色村",
+          city_name_kana = "かみくいしきむら",
+          merger = "中道町(19326)と上九一色村(19341)大字梯及び古関が甲府市(19201)に編入") %>%
+
   mutate(merger = merger %>%
            str_remove_all("\\s") %>%
            stringi::stri_trans_nfkc(),
          pattern_city = case_when(!is.na(city_name) ~ str_glue("(\\(({city_name_kana}、)?{city_code}\\))"),
                                   is.na(city_name) ~ str_glue("(\\(({subprefecture_name_kana}、)?{city_code}\\))")),
-         pattern_city = case_when(city_name == "上九一色村" ~ "上九一色村\\(19341\\)大字梯及び古関|大字精進、本栖及び富士ヶ嶺",
+         pattern_city = case_when(city_name == "上九一色村" ~ str_glue("{city_name}{pattern_city}大字梯及び古関|大字精進、本栖及び富士ヶ嶺"),
+
                                   !is.na(city_name) ~ str_glue("({prefecture_name})?({replace_na(subprefecture_name, '')})?{city_name}{pattern_city}?") %>%
                                     as.character(),
                                   is.na(city_name) ~ str_glue("({prefecture_name})?{subprefecture_name}{pattern_city}?") %>%
@@ -69,18 +85,19 @@ merger <- merger %>%
 
 # pattern_mergertype
 zero_or_more <- str_glue("{{{{0,{max(str_length(merger$merger))}}}}}")
-pattern_cities <- str_glue("({{pattern_city}}[、と]){zero_or_more}{{pattern_city}}")
-pattern_merger <- list(`編入合併` =  c(pattern_cities, "が", pattern_cities, "に編入"),
-                       `新設合併` = c(pattern_cities, "が(合併|統合)し、", pattern_cities, "を新設"),
-                       `政令指定都市施行` = c(pattern_cities, "の", pattern_cities, "への政令指定都市(施|移)行"),
+pattern_city <- "{pattern_city}"
+pattern_cities <- str_glue("({pattern_city}[、と]){zero_or_more}{pattern_city}")
+pattern_merger <- list(`編入合併` =  c(pattern_cities, "が", pattern_city, "に編入"),
+                       `新設合併` = c(pattern_cities, "が(合併|統合)し、", pattern_city, "を新設"),
+                       `政令指定都市施行` = c(pattern_city, "の", pattern_city, "への政令指定都市(施|移)行"),
                        `区の新設|郡の新設` = c("", "", pattern_cities, "の新設"),
-                       `分割` = c(pattern_cities, "を分割し、", pattern_cities, "を新設"),
+                       `分割` = c(pattern_city, "を分割し、", pattern_cities, "を新設"),
                        `分離` = c(pattern_cities, "から分離し、", pattern_cities, "を新設"),
-                       `名称変更` = c(pattern_cities, str_glue("が(.{zero_or_more}に[市町]制施行し、)?"), pattern_cities, "に名称変更"),
-                       `町制施行` = c(pattern_cities, str_glue("が(.{zero_or_more}に名称変更し、)?"), pattern_cities, "に町制施行"),
-                       `市制施行` = c(pattern_cities, str_glue("が(.{zero_or_more}に名称変更し、)?"), pattern_cities, "に市制施行"),
+                       `名称変更` = c(pattern_city, str_glue("が(.{zero_or_more}に[市町]制施行し、)?"), pattern_city, "に名称変更"),
+                       `町制施行` = c(pattern_city, str_glue("が(.{zero_or_more}に名称変更し、)?"), pattern_city, "に町制施行"),
+                       `市制施行` = c(pattern_city, str_glue("が(.{zero_or_more}に名称変更し、)?"), pattern_city, "に市制施行"),
                        `郡の区域変更` = c(pattern_cities, "が", pattern_cities, "に(郡の)?区域変更"),
-                       `郡の廃止` = c(pattern_cities, "の廃止", "", ""))
+                       `郡の廃止` = c(pattern_city, "の廃止", "", ""))
 
 pattern_mergertype <- pattern_merger %>%
   map_chr(~ str_glue("^{.x[[1]]}{.x[[2]]}{.x[[3]]}{.x[[4]]}$"))
@@ -91,7 +108,9 @@ pattern_city_from <- pattern_merger %>%
 pattern_city_to <- pattern_merger %>%
   map_chr(~ str_glue("(?<={.x[[1]]}{.x[[2]]}){.x[[3]]}(?={.x[[4]]}$)"))
 
-merger <- merger %>%
+merger_ <- merger %>%
+
+  # filter(str_detect(merger, "上九一色村")) %>%
 
   filter(!str_detect(merger, "(特例市に|中核市に)移行$")) %>%
 
@@ -126,6 +145,20 @@ merger <- merger %>%
 
   unnest(city_from) %>%
   unnest(city_to)
+
+merger_ %>%
+  filter(is.na(mergertype))
+
+merger_ %>%
+  filter(str_detect(merger, "大字"))
+
+res$pattern_city[[1]]
+
+"上九一色村(19341)大字梯及び古関が甲府市(19201)に編入" %>%
+  str_detect("上九一色村\\(19341\\)大字梯及び古関が甲府市\\(19201\\)に編入")
+
+"上九一色村(19341)大字梯及び古関が甲府市(19201)に編入" %>%
+  str_detect("(上九一色村\\(19341\\)大字梯及び古関|(山梨県)?(南都留郡)?富士河口湖町(\\((ふじかわぐちこまち、)?19430\\))?)が(上九一色村\\(19341\\)大字梯及び古関|(山梨県)?(南都留郡)?富士河口湖町(\\((ふじかわぐちこまち、)?19430\\))?)")
 
 # # 上九一色村(19341)大字梯及び古関が甲府市(19201)に編入し、大字精進、本栖及び富士ヶ嶺が富士河口湖町(19430)に編入
 # merger %>%
