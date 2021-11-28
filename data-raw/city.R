@@ -51,4 +51,6 @@ city <- bind_rows(city_start %>%
   replace_na(list(merged = "")) %>%
   mutate(merged = merged == "有")
 
-city
+usethis::use_data(city,
+                  internal = TRUE,
+                  overwrite = TRUE)
