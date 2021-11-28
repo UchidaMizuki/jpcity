@@ -110,8 +110,6 @@ pattern_city_to <- pattern_merger %>%
 
 merger_ <- merger %>%
 
-  # filter(str_detect(merger, "上九一色村")) %>%
-
   filter(!str_detect(merger, "(特例市に|中核市に)移行$")) %>%
 
   mutate(mergertype = case_when(str_detect(merger, str_glue(pattern_mergertype[["編入合併"]])) ~ "編入合併",
@@ -125,6 +123,7 @@ merger_ <- merger %>%
                                 str_detect(merger, str_glue(pattern_mergertype[["市制施行"]])) ~ "市制施行",
                                 str_detect(merger, str_glue(pattern_mergertype[["郡の区域変更"]])) ~ "郡の区域変更",
                                 str_detect(merger, str_glue(pattern_mergertype[["郡の廃止"]])) ~ "郡の廃止")) %>%
+  group_nest(mergertype) %>%
   left_join(pattern_city_from %>%
               enframe("mergertype", "pattern_city_from"),
             by = "mergertype") %>%
@@ -132,9 +131,13 @@ merger_ <- merger %>%
               enframe("mergertype", "pattern_city_to"),
             by = "mergertype") %>%
   rowwise() %>%
-  mutate(pattern_city_from = str_glue(pattern_city_from),
-         pattern_city_to = str_glue(pattern_city_to)) %>%
+  mutate(data = data %>%
+           mutate(pattern_city_from = str_glue(pattern_city_from),
+                  pattern_city_to = str_glue(pattern_city_to)) %>%
+           list(),
+         .keep = "unused") %>%
   ungroup() %>%
+  unnest(data) %>%
   mutate(city_from = merger %>%
            str_extract(pattern_city_from) %>%
            str_extract_all(pattern_city),
@@ -146,36 +149,6 @@ merger_ <- merger %>%
   unnest(city_from) %>%
   unnest(city_to)
 
-merger_ %>%
-  filter(is.na(mergertype))
-
-merger_ %>%
-  filter(str_detect(merger, "大字"))
-
-res$pattern_city[[1]]
-
-"上九一色村(19341)大字梯及び古関が甲府市(19201)に編入" %>%
-  str_detect("上九一色村\\(19341\\)大字梯及び古関が甲府市\\(19201\\)に編入")
-
-"上九一色村(19341)大字梯及び古関が甲府市(19201)に編入" %>%
-  str_detect("(上九一色村\\(19341\\)大字梯及び古関|(山梨県)?(南都留郡)?富士河口湖町(\\((ふじかわぐちこまち、)?19430\\))?)が(上九一色村\\(19341\\)大字梯及び古関|(山梨県)?(南都留郡)?富士河口湖町(\\((ふじかわぐちこまち、)?19430\\))?)")
-
-# # 上九一色村(19341)大字梯及び古関が甲府市(19201)に編入し、大字精進、本栖及び富士ヶ嶺が富士河口湖町(19430)に編入
-# merger %>%
-#   filter(is.na(mergertype),
-#          merger == "上九一色村(19341)大字梯及び古関が甲府市(19201)に編入し、大字精進、本栖及び富士ヶ嶺が富士河口湖町(19430)に編入") %>%
-#   mutate(mergertype = "編入合併",
-#          city_from = "上九一色村(19341)",
-#          city_to = list(c("甲府市(19201)", "富士河口湖町(19430)"))) %>%
-#   unnest(city_to)
-#
-# # 中道町(19326)と上九一色村(19341)大字梯及び古関が甲府市(19201)に編入
-#
-# merger %>%
-#   filter(is.na(mergertype)) %>%
-#   mutate(mergertype = case_when(merger == "上九一色村(19341)大字梯及び古関が甲府市(19201)に編入し、大字精進、本栖及び富士ヶ嶺が富士河口湖町(19430)に編入" ~ "編入合併",
-#                                 merger == "中道町(19326)と上九一色村(19341)大字梯及び古関が甲府市(19201)に編入" ~ "編入合併"),
-#          city_from = case_when(merger == "上九一色村(19341)大字梯及び古関が甲府市(19201)に編入し、大字精進、本栖及び富士ヶ嶺が富士河口湖町(19430)に編入" ~ list(""),
-#                                merger == "中道町(19326)と上九一色村(19341)大字梯及び古関が甲府市(19201)に編入" ~ "編入合併"))
-
-
+# 2006-03-01: 上九一色村の分割・編入合併では富士河口湖町の比重 (人口) のほうが大きい (https://www.gappei-archive.soumu.go.jp/db/19yama/0260kou/hikaku/hikaku.html)
+# 1974-04-01: 小倉区の分割では，1980年時点人口で，小倉北区 (217204人) > 小倉南区 (181740人)
+# 1974-04-01: 八幡区の分割では，1980年時点人口で，八幡東区 (107880人) < 八幡西区 (248069人)
