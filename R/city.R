@@ -1,5 +1,3 @@
-#'
-#'
 #' @export
 city_shikuchoson <- function(x, date,
                              shi = TRUE,
@@ -10,7 +8,6 @@ city_shikuchoson <- function(x, date,
 
 }
 
-#' @rdname city_shikuchoson
 #' @export
 city_shichoson <- function(x, date,
                            shi = TRUE,

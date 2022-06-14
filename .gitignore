@@ -4,3 +4,5 @@
 .Ruserdata
 data-raw/city
 data-raw/merger
+*.csv
+*.parquet

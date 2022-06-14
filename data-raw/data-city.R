@@ -1,16 +1,32 @@
+library(tidyverse)
+library(fs)
+library(reticulate)
 library(lubridate)
-library(stringr)
-library(readr)
-library(tibble)
-library(dplyr)
-library(tidyr)
+library(arrow)
 
 pkgload::load_all()
 
-# city --------------------------------------------------------------------
+if (int_end(interval_merger) != today()) {
+  source("data-raw/data-merger.R",
+         encoding = "utf-8")
+}
 
-date_start <- date(int_start(interval_merger))
-date_end <- date(int_end(interval_merger))
+# data-city ---------------------------------------------------------------
+
+path_city <- "data-raw/data-city"
+path_city_raw <- str_c(path_city, "raw",
+                       sep = "/")
+
+if (dir_exists(path_city_raw)) {
+  dir_ls(path_city_raw) |>
+    file_delete()
+} else {
+  dir_create(path_city_raw)
+}
+
+
+
+# TODO
 
 col_types_city <- cols(`標準地域コード` = "c",
                        `都道府県` = "c",
