@@ -1,0 +1,76 @@
+source("data-raw/setup.R")
+
+# setup-selenium ----------------------------------------------------------
+
+webdriver <- import("selenium")$webdriver
+Service <- import("selenium.webdriver.chrome.service")$Service
+By <- import("selenium.webdriver.common.by")$By
+ActionChains <- import("selenium.webdriver.common.action_chains")$ActionChains
+Select <- import("selenium.webdriver.support.select")$Select
+
+ChromeDriverManager <- import("webdriver_manager.chrome")$ChromeDriverManager
+
+new_driver <- function(exdir,
+                       headless = FALSE) {
+  options <- webdriver$ChromeOptions()
+  options$headless <- headless
+
+  options$add_experimental_option("prefs",
+                                  list(`download.default_directory` = path_abs(exdir) |>
+                                         str_replace_all("/", r"(\\)")))
+
+  webdriver$Chrome(service = Service(ChromeDriverManager()$install()),
+                   options = options)
+}
+
+select_date <- function(driver, date, year_name, month_name, day_name) {
+  date_year <- driver$find_element(By$XPATH, str_glue('//select[@name="{year_name}"]'))
+  date_year <- Select(date_year)
+  date_year$select_by_value(as.character(year(date)))
+
+  date_month <- driver$find_element(By$XPATH, str_glue('//select[@name="{month_name}"]'))
+  date_month <- Select(date_month)
+  date_month$select_by_value(as.character(month(date)))
+
+  date_day <- driver$find_element(By$XPATH, str_glue('//select[@name="{day_name}"]'))
+  date_day <- Select(date_day)
+  date_day$select_by_value(as.character(day(date)))
+}
+
+click_city_category <- function(driver) {
+  city_category_list <- driver$find_element(By$XPATH, '//td[@data-alias="city_category_list"]')
+  city_kd <- 2:7
+
+  for (i in city_kd) {
+    xpath <- str_glue('*/input[@name="city_kd[{i}]"]')
+    checkbox <- city_category_list$find_element(By$XPATH, xpath)
+
+    if (!checkbox$is_selected()) {
+      checkbox$click()
+    }
+  }
+}
+
+click_submit_button <- function(driver) {
+  driver$find_element(By$XPATH, '//button[@value="search"]')$click()
+}
+
+click_download_button <- function(driver) {
+  driver$find_element(By$XPATH, '//li[contains(@class,"js-dbview-download-button")]/button')$click()
+
+  button <- driver$find_element(By$XPATH, '//div[contains(@class,"stat-display_selector-modal-ok")]')
+  action <- ActionChains(driver)
+  action$move_to_element(button)
+  action$click(button)
+  action$perform()
+}
+
+close_driver <- insistently(\(driver, exdir) {
+  if (vec_is_empty(dir_ls(exdir))) {
+    stop()
+  } else {
+    driver$close()
+  }
+},
+rate = rate_backoff(max_times = 1e1),
+quiet = FALSE)
