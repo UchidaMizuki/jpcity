@@ -38,8 +38,8 @@ col_types <- cols(`標準地域コード` = "c",
 
 col_names <- c(`標準地域コード` = "city_code",
                `都道府県` = "pref_name",
-               `政令市･郡･支庁･振興局等` = "subpref_name",
-               `政令市･郡･支庁･振興局等（ふりがな）` = "subpref_name_kana",
+               `政令市･郡･支庁･振興局等` = "city_desig_name",
+               `政令市･郡･支庁･振興局等（ふりがな）` = "city_desig_name_kana",
                `市区町村` = "city_name",
                `市区町村（ふりがな）` = "city_name_kana",
                `廃置分合等施行年月日` = "date",
@@ -52,10 +52,14 @@ absorption_separation <- dir_ls(exdir) |>
               names(col_names)) |>
   relocate(date) |>
   arrange(date) |>
-  mutate(across(c(pref_name, subpref_name, subpref_name_kana, city_name, city_name_kana),
+  mutate(across(c(pref_name, city_desig_name, city_desig_name_kana, city_name, city_name_kana),
                 \(x) x |>
                   str_remove_all(r"(\s)") |>
                   stringi::stri_trans_nfkc()),
+         city_name = city_name |>
+           coalesce(city_desig_name),
+         city_name_kana = city_name_kana |>
+           coalesce(city_desig_name_kana),
          event = event |>
            str_split(r"(\n|(?<=編入)し、)")) |>
   unnest(event)  |>
@@ -71,24 +75,21 @@ absorption_separation <- dir_ls(exdir) |>
   add_row(date = ymd("2006-03-01"),
           city_code = "19341",
           pref_name = "山梨県",
-          subpref_name = "西八代郡",
-          subpref_name_kana = "にしやつしろぐん",
+          city_desig_name = "西八代郡",
+          city_desig_name_kana = "にしやつしろぐん",
           city_name = "上九一色村",
           city_name_kana = "かみくいしきむら",
           event = "中道町(19326)と上九一色村(19341)大字梯及び古関が甲府市(19201)に編入") |>
-  mutate(city_name = city_name |>
-           coalesce(subpref_name),
-         city_name_kana = city_name_kana |>
-           coalesce(subpref_name_kana)) |>
-  summarise(across(c(city_code, pref_name, subpref_name, subpref_name_kana, city_name_kana),
+  summarise(across(c(city_code, pref_name, city_desig_name, city_desig_name_kana, city_name_kana),
                    \(x) x |>
-                       discard(is.na) |>
-                       vec_unique() |>
-                       str_c(collapse = "|")),
+                     discard(is.na) |>
+                     vec_unique() |>
+                     str_c(collapse = "|")),
             .by = c(date, city_name, event)) |>
+  relocate(city_code) |>
   mutate(pattern_city = str_glue(r"((\((({city_name_kana})、)?({city_code})\)))"),
          pattern_city = case_when(city_name == "上九一色村" ~ str_glue("{city_name}{pattern_city}大字梯及び古関|大字精進、本栖及び富士ヶ嶺"),
-                                  TRUE ~ str_glue("({pref_name})?({subpref_name})?{city_name}{pattern_city}?")),
+                                  TRUE ~ str_glue("({pref_name})?({city_desig_name})?{city_name}{pattern_city}?")),
          pattern_city = str_glue("^{pattern_city}$")) |>
   nest(.by = c(date, event),
        .key = "city") |>
@@ -133,6 +134,25 @@ pattern_city_to <- pattern_absorption_separation |>
   str_glue_data("(?<={city_from}{verb_city_from}){city_to}(?={verb_city_to}$)") |>
   set_names(pattern_absorption_separation$name)
 
+get_city_from_to <- function(city, city_from_to) {
+  out <- city |>
+    filter(str_detect(city_from_to, pattern_city)) |>
+    select(!pattern_city)
+  stopifnot(vec_size(out) == 1L)
+  if (str_detect(out$city_code, "\\|")) {
+    city_code <- city_from_to |>
+      str_extract("\\d{5}")
+
+    out <- out |>
+      mutate(across(everything(),
+                    \(x) x |>
+                      str_split("\\|"))) |>
+      unnest(everything()) |>
+      filter(city_code == .env$city_code)
+  }
+  out
+}
+
 absorption_separation <- absorption_separation |>
   filter(!str_detect(event, "(特例市に|中核市に)移行$")) |>
   mutate(type = case_when(str_detect(event, str_glue(pattern_type[["編入合併"]])) ~ "編入合併",
@@ -174,24 +194,14 @@ absorption_separation <- absorption_separation |>
   unnest(city_from) |>
   unnest(city_to) |>
   mutate(from = list(city, city_from) |>
-           pmap(\(city, city_from) {
-             out <- city |>
-               filter(str_detect(city_from, pattern_city)) |>
-               select(!pattern_city)
-             stopifnot(vec_size(out) == 1L)
-             out
-           }) |>
+           pmap(get_city_from_to) |>
            list_c(),
          to = list(city, city_to) |>
-           pmap(\(city, city_to) {
-             out <- city |>
-               filter(str_detect(city_to, pattern_city)) |>
-               select(!pattern_city)
-             stopifnot(vec_size(out) == 1L)
-             out
-           }) |>
+           pmap(get_city_from_to) |>
            list_c(),
-         .keep = "unused")
+         .keep = "unused") |>
+  filter(str_ends(from$city_name, "[市区町村]|特別区部"),
+         str_ends(to$city_name, "[市区町村]|特別区部"))
 
 absorption_separation <- list(date_interval = date_start %--% date_end,
                               absorption_separation = absorption_separation)

@@ -32,8 +32,8 @@ get_areacode <- function(date) {
 
   col_names <- c(`標準地域コード` = "city_code",
                  `都道府県` = "pref_name",
-                 `政令市･郡･支庁･振興局等` = "subpref_name",
-                 `政令市･郡･支庁･振興局等（ふりがな）` = "subpref_name_kana",
+                 `政令市･郡･支庁･振興局等` = "city_desig_name",
+                 `政令市･郡･支庁･振興局等（ふりがな）` = "city_desig_name_kana",
                  `市区町村` = "city_name",
                  `市区町村（ふりがな）` = "city_name_kana",
                  `廃置分合等施行年月日` = "date_merger",
@@ -44,10 +44,15 @@ get_areacode <- function(date) {
              col_types = col_types) |>
     rename_with(\(.) col_names,
                 names(col_names)) |>
-    mutate(across(c(pref_name, subpref_name, subpref_name_kana, city_name, city_name_kana),
+    mutate(across(c(pref_name, city_desig_name, city_desig_name_kana, city_name, city_name_kana),
                   \(x) x |>
                     str_remove_all(r"(\s)") |>
-                    stringi::stri_trans_nfkc())) |>
+                    stringi::stri_trans_nfkc()),
+           city_name = city_name |>
+             coalesce(city_desig_name),
+           city_name_kana = city_name_kana |>
+             coalesce(city_desig_name_kana)) |>
+    filter(str_ends(city_name, "[市区町村]|特別区部")) |>
     replace_na(list(merged = "")) |>
     mutate(merged = merged == "有")
 }
