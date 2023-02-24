@@ -1,7 +1,7 @@
-library(tidyverse)
-library(reticulate)
 library(fs)
-library(lubridate)
+library(reticulate)
+library(tidygraph)
+library(tidyverse)
 library(vctrs)
 
 # setup -------------------------------------------------------------------

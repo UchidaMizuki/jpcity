@@ -36,8 +36,8 @@ get_areacode <- function(date) {
                  `政令市･郡･支庁･振興局等（ふりがな）` = "city_desig_name_kana",
                  `市区町村` = "city_name",
                  `市区町村（ふりがな）` = "city_name_kana",
-                 `廃置分合等施行年月日` = "date_merger",
-                 `廃置分合等情報有無` = "merged")
+                 `廃置分合等施行年月日` = "date_absorption_separation",
+                 `廃置分合等情報有無` = "absorption_separation")
 
   dir_ls(exdir) |>
     read_csv(locale = locale(encoding = "shift-jis"),
@@ -46,27 +46,25 @@ get_areacode <- function(date) {
                 names(col_names)) |>
     mutate(across(c(pref_name, city_desig_name, city_desig_name_kana, city_name, city_name_kana),
                   \(x) x |>
-                    str_remove_all(r"(\s)") |>
-                    stringi::stri_trans_nfkc()),
-           city_name = city_name |>
-             coalesce(city_desig_name),
-           city_name_kana = city_name_kana |>
-             coalesce(city_desig_name_kana)) |>
-    filter(str_ends(city_name, "[市区町村]|特別区部")) |>
-    replace_na(list(merged = "")) |>
-    mutate(merged = merged == "有")
+                    str_remove_all("\\s") |>
+                    stringi::stri_trans_nfkc())) |>
+    #        city_name = city_name |>
+    #          coalesce(city_desig_name),
+    #        city_name_kana = city_name_kana |>
+    #          coalesce(city_desig_name_kana)) |>
+    # filter(str_ends(city_name, "[市区町村]|特別区部")) |>
+    replace_na(list(absorption_separation = "")) |>
+    mutate(absorption_separation = absorption_separation == "有")
 }
 
 date_start <- ymd("1970-04-01")
-areacode_start <- get_areacode(date_start)
+areacode_start <- list(date = date_start,
+                       areacode = get_areacode(date_start))
 
 date_end <- today()
-areacode_end <- get_areacode(date_end)
+areacode_end <- list(date = date_end,
+                     areacode = get_areacode(date_end))
 
 dir_create("data-raw/areacode")
-write_rds(list(date = date_start,
-               areacode = areacode_start),
-          "data-raw/areacode/areacode_start.rds")
-write_rds(list(date = date_end,
-               areacode = areacode_end),
-          "data-raw/areacode/areacode_end.rds")
+write_rds(areacode_start, "data-raw/areacode/areacode_start.rds")
+write_rds(areacode_end, "data-raw/areacode/areacode_end.rds")
