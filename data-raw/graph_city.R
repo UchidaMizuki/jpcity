@@ -30,13 +30,17 @@ interval <- absorption_separation$interval
 stopifnot(areacode_start$date %--% areacode_end$date == interval)
 
 areacode_start <- tidy_city(areacode_start$areacode) |>
-  vec_unique()
+  vec_unique() |>
+  filter(is.na(pref_name) | !is.na(city_desig_name) | !is.na(city_name))
 areacode_end <- tidy_city(areacode_end$areacode) |>
-  vec_unique()
+  vec_unique() |>
+  filter(is.na(pref_name) | !is.na(city_desig_name) | !is.na(city_name))
 absorption_separation <- absorption_separation$absorption_separation |>
   mutate(across(c(from, to),
                 tidy_city)) |>
-  vec_unique()
+  vec_unique() |>
+  filter(is.na(from$pref_name) | !is.na(from$city_desig_name) | !is.na(from$city_name),
+         is.na(to$pref_name) | !is.na(to$city_desig_name) | !is.na(to$city_name))
 
 nodes_city <- bind_rows(vec_init(areacode_start),
                         areacode_start,
