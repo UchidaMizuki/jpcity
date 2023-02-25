@@ -15,7 +15,8 @@ tidy_city <- function(data) {
                                           NA_character_),
            city_name_kana = case_match(city_code,
                                        "02445" ~ "なんぶちょう",
-                                       "41401" ~ "ありたちょう")) |>
+                                       "41401" ~ "ありたちょう",
+                                       .default = city_name_kana)) |>
     select(!!!col_names_city)
 }
 
