@@ -11,13 +11,16 @@ Select <- import("selenium.webdriver.support.select")$Select
 ChromeDriverManager <- import("webdriver_manager.chrome")$ChromeDriverManager
 
 new_driver <- function(exdir,
-                       headless = FALSE) {
+                       headless = TRUE) {
   options <- webdriver$ChromeOptions()
-  options$headless <- headless
+  if (headless) {
+    options$add_argument("--headless=new")
+  }
+  # options$headless <- headless
 
   options$add_experimental_option("prefs",
                                   list(`download.default_directory` = path_abs(exdir) |>
-                                         str_replace_all("/", r"(\\)")))
+                                         str_replace_all("/", "\\\\")))
 
   webdriver$Chrome(service = Service(ChromeDriverManager()$install()),
                    options = options)
@@ -37,15 +40,35 @@ select_date <- function(driver, date, year_name, month_name, day_name) {
   date_day$select_by_value(as.character(day(date)))
 }
 
-click_city_category <- function(driver) {
-  city_category_list <- driver$find_element(By$XPATH, '//td[@data-alias="city_category_list"]')
-  city_kd <- 2:7
+click_pref <- function(driver, pref_code) {
+  checkbox <- driver$find_element(By$XPATH, '//input[@name="prefecture_all"]')
+  if (checkbox$is_selected()) {
+    checkbox$click()
+  }
 
-  for (i in city_kd) {
-    xpath <- str_glue('*/input[@name="city_kd[{i}]"]')
-    checkbox <- city_category_list$find_element(By$XPATH, xpath)
+  pref_boxes <- driver$find_elements(By$XPATH, '//td[@data-alias="pref_boxes"]//input')
+  for (checkbox in pref_boxes) {
+    if (checkbox$is_selected()) {
+      checkbox$click()
+    }
 
-    if (!checkbox$is_selected()) {
+    pref_code_checkbox <- checkbox$get_attribute("value")
+    if (pref_code_checkbox %in% pref_code) {
+      checkbox$click()
+    }
+  }
+}
+
+click_city_category <- function(driver, city_kd = 2:7) {
+  city_category_list <- driver$find_elements(By$XPATH, '//td[@data-alias="city_category_list"]//input')
+
+  for (checkbox in city_category_list) {
+    if (checkbox$is_selected()) {
+      checkbox$click()
+    }
+
+    city_kd_checkbox <- checkbox$get_attribute("value")
+    if (city_kd_checkbox %in% city_kd) {
       checkbox$click()
     }
   }

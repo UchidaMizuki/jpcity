@@ -9,7 +9,7 @@ areacode_end <- read_rds("data-raw/areacode/areacode_end.rds")
 date_start <- areacode_start$date
 date_end <- areacode_end$date
 
-exdir <- file_temp()
+exdir <- "data-raw/absorption_separation"
 driver <- new_driver(exdir)
 driver$get("https://www.e-stat.go.jp/municipalities/cities/absorption-separation-of-municipalities")
 
@@ -23,6 +23,8 @@ select_date(driver, date_end,
             day_name = "day_to")
 click_city_category(driver)
 click_submit_button(driver)
+
+dir_delete(exdir)
 click_download_button(driver)
 
 close_driver(driver, exdir)
@@ -45,7 +47,8 @@ col_names <- c(`標準地域コード` = "city_code",
                `廃置分合等施行年月日` = "date",
                `改正事由` = "event")
 
-absorption_separation <- dir_ls(exdir) |>
+absorption_separation <- dir_ls(exdir,
+                                regexp = "csv$") |>
   read_csv(locale = locale(encoding = "shift-jis"),
            col_types = col_types) |>
   rename_with(\(.) col_names,
@@ -135,34 +138,40 @@ pattern_city_to <- pattern_absorption_separation |>
   set_names(pattern_absorption_separation$name)
 
 get_city_from_to <- function(city, city_from_to) {
-  out <- city |>
-    filter(str_detect(city_from_to, pattern_city)) |>
-    select(!pattern_city)
-  stopifnot(vec_size(out) == 1L)
-  if (str_detect(out$city_code, "\\|")) {
-    city_code <- city_from_to |>
-      str_extract("\\d{5}")
-    city_name_kana <- city_from_to |>
-      str_extract("(?<=\\()\\p{Hiragana}+(?=、\\d{5}\\))")
+  if (is.na(city_from_to)) {
+    city |>
+      select(!pattern_city) |>
+      vec_init()
+  } else {
+    out <- city |>
+      filter(str_detect(city_from_to, pattern_city)) |>
+      select(!pattern_city)
+    stopifnot(vec_size(out) == 1L)
+    if (str_detect(out$city_code, "\\|")) {
+      city_code <- city_from_to |>
+        str_extract("\\d{5}")
+      city_name_kana <- city_from_to |>
+        str_extract("(?<=\\()\\p{Hiragana}+(?=、\\d{5}\\))")
 
-    out <- out |>
+      out <- out |>
+        mutate(across(everything(),
+                      \(x) x |>
+                        str_split("\\|"))) |>
+        unnest(everything()) |>
+        filter(city_code == .env$city_code,
+               is.na(.env$city_name_kana) | city_name_kana == .env$city_name_kana)
+      stopifnot(vec_size(out) == 1L)
+    }
+    out |>
       mutate(across(everything(),
                     \(x) x |>
-                      str_split("\\|"))) |>
-      unnest(everything()) |>
-      filter(city_code == .env$city_code,
-             is.na(.env$city_name_kana) | city_name_kana == .env$city_name_kana)
-    stopifnot(vec_size(out) == 1L)
+                      na_if("")),
+             city_name = city_name |>
+               na_if(city_desig_name),
+             city_name_kana = city_name_kana |>
+               na_if(city_desig_name_kana)) |>
+      relocate(city_code, pref_name, city_desig_name, city_desig_name_kana, city_name, city_name_kana)
   }
-  out |>
-    mutate(across(everything(),
-                  \(x) x |>
-                    na_if("")),
-           city_name = city_name |>
-             na_if(city_desig_name),
-           city_name_kana = city_name_kana |>
-             na_if(city_desig_name_kana)) |>
-    relocate(city_code, pref_name, city_desig_name, city_desig_name_kana, city_name, city_name_kana)
 }
 
 absorption_separation <- absorption_separation |>
@@ -203,8 +212,10 @@ absorption_separation <- absorption_separation |>
            str_extract(pattern_city_to) |>
            str_extract_all(pattern_city),
          .keep = "unused") |>
-  unnest(city_from) |>
-  unnest(city_to) |>
+  unnest(city_from,
+         keep_empty = TRUE) |>
+  unnest(city_to,
+         keep_empty = TRUE) |>
   mutate(from = list(city, city_from) |>
            pmap(get_city_from_to) |>
            list_c(),
@@ -213,7 +224,67 @@ absorption_separation <- absorption_separation |>
            list_c(),
          .keep = "unused")
 
-absorption_separation <- list(date_interval = date_start %--% date_end,
-                              absorption_separation = absorption_separation)
+# okinawa_reversion -------------------------------------------------------
+
+# https://ja.wikipedia.org/wiki/%E6%B2%96%E7%B8%84%E8%BF%94%E9%82%84
+date_okinawa_reversion <- ymd("1972-06-07")
+
+exdir <- "data-raw/absorption_separation/okinawa_reversion"
+driver <- new_driver(exdir)
+driver$get("https://www.e-stat.go.jp/municipalities/cities/areacode")
+select_date(driver, date_okinawa_reversion,
+            year_name = "date_year",
+            month_name = "date_month",
+            day_name = "date_day")
+click_pref(driver, 47L)
+click_city_category(driver)
+click_submit_button(driver)
+click_download_button(driver)
+
+close_driver(driver, exdir)
+
+absorption_separation_okinawa_reversion <- read_areacode(exdir) |>
+  rename(date = date_absorption_separation) |>
+  select(!absorption_separation)
+absorption_separation_okinawa_reversion <- tibble(date = absorption_separation_okinawa_reversion$date,
+                                                  type = "沖縄返還",
+                                                  from = vec_init(absorption_separation_okinawa_reversion),
+                                                  to = absorption_separation_okinawa_reversion)
+
+# northern_territories ----------------------------------------------------
+
+date_northern_territories <- ymd("1983-04-01")
+
+exdir <- "data-raw/absorption_separation/northern_territories"
+driver <- new_driver(exdir)
+driver$get("https://www.e-stat.go.jp/municipalities/cities/areacode")
+select_date(driver, date_northern_territories,
+            year_name = "date_year",
+            month_name = "date_month",
+            day_name = "date_day")
+click_pref(driver, 1L)
+click_city_category(driver)
+click_submit_button(driver)
+click_download_button(driver)
+
+close_driver(driver, exdir)
+
+absorption_separation_northern_territories <- read_areacode(exdir) |>
+  filter(as.integer(city_code) %in% 1695:1700) |>
+  rename(date = date_absorption_separation) |>
+  select(!absorption_separation)
+absorption_separation_northern_territories <- tibble(date = absorption_separation_northern_territories$date,
+                                                     type = "北方領土",
+                                                     from = vec_init(absorption_separation_northern_territories),
+                                                     to = absorption_separation_northern_territories)
+
+
+# write_rds ---------------------------------------------------------------
+
+absorption_separation <- list(interval = date_start %--% date_end,
+                              absorption_separation = bind_rows(absorption_separation,
+                                                                absorption_separation_okinawa_reversion,
+                                                                absorption_separation_northern_territories) |>
+                                arrange(date, type))
 
 write_rds(absorption_separation, "data-raw/absorption_separation.rds")
