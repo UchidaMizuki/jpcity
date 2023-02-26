@@ -122,6 +122,7 @@ stopifnot(
 )
 
 nodes_city <- graph_city |>
-  tidygraph::activate("nodes") |>
-  tibble::as_tibble() |>
-  dplyr::filter(!is.na(.data$city_code))
+  activate("nodes") |>
+  as_tibble() |>
+  rowid_to_column("node") |>
+  filter(!is.na(.data$city_code))
