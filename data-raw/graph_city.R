@@ -120,3 +120,8 @@ stopifnot(
     select(city_code, interval) |>
     vec_duplicate_any()
 )
+
+nodes_city <- graph_city |>
+  tidygraph::activate("nodes") |>
+  tibble::as_tibble() |>
+  dplyr::filter(!is.na(.data$city_code))

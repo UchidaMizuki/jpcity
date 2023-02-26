@@ -9,7 +9,7 @@ source("data-raw/city_desig_code.R")
 
 # internal ----------------------------------------------------------------
 
-usethis::use_data(graph_city, interval_graph_city,
+usethis::use_data(interval_graph_city, graph_city, nodes_city,
                   city_desig_code,
                   internal = TRUE,
                   overwrite = TRUE)

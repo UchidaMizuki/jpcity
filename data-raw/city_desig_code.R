@@ -2,10 +2,7 @@ source("data-raw/setup.R")
 
 # city_desig_code ---------------------------------------------------------
 
-city_code <- graph_city |>
-  activate(nodes) |>
-  as_tibble() |>
-  filter(!is.na(city_code)) |>
+city_code <- nodes_city |>
   select(!interval) |>
   mutate(city_desig_name = if_else(str_starts(city_code, "131"),
                                    "特別区部",
