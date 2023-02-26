@@ -7,8 +7,10 @@ parse_city <- function(city_code,
     if (lubridate::is.interval(when)) {
       interval <- when
     } else {
-      when <- lubridate::as_date(when,
-                                 tz = tz_jst)
+      if (is.character(when)) {
+        when <- lubridate::ymd(when,
+                               tz = tz_jst)
+      }
       interval <- when %--% when
     }
   }

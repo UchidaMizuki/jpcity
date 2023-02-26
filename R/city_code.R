@@ -53,7 +53,7 @@ check_interval_city_code <- function(city_code, interval) {
                                    interval = interval)
 
   out <- interval_city_code |>
-    dplyr::pull(interval) |>
+    dplyr::pull("interval") |>
     purrr::discard(is.na) |>
     intersect_interval()
 

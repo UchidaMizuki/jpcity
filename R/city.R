@@ -5,7 +5,6 @@ city_data <- function(city_code,
     city_code <- city_code(city_code)
   }
 
-  interval <- interval %||% interval_graph_city
   nodes_city <- nodes_city |>
     dplyr::filter(.data$city_code %in% .env$city_code,
                   .env$interval %within% .data$interval)
