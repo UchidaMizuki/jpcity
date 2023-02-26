@@ -126,3 +126,7 @@ nodes_city <- graph_city |>
   as_tibble() |>
   rowid_to_column("node") |>
   filter(!is.na(.data$city_code))
+
+interval_city_code <- nodes_city |>
+  summarise(interval = min(int_start(interval)) %--% max(int_end(interval)),
+            .by = city_code)
