@@ -25,9 +25,9 @@ areacode_start <- read_rds("data-raw/areacode/areacode_start.rds")
 areacode_end <- read_rds("data-raw/areacode/areacode_end.rds")
 absorption_separation <- read_rds("data-raw/absorption_separation.rds")
 
-interval <- absorption_separation$interval
+interval_graph_city <- absorption_separation$interval
 
-stopifnot(areacode_start$date %--% areacode_end$date == interval)
+stopifnot(areacode_start$date %--% areacode_end$date == interval_graph_city)
 
 areacode_start <- tidy_city(areacode_start$areacode) |>
   vec_unique() |>
@@ -53,7 +53,7 @@ edges_city <- bind_rows(areacode_start |>
                           left_join(nodes_city |>
                                       rename(to = node),
                                     by = col_names_city) |>
-                          add_column(date = int_start(interval),
+                          add_column(date = int_start(interval_graph_city),
                                      type = "start",
                                      from = 1L),
                         absorption_separation |>
@@ -69,7 +69,7 @@ edges_city <- bind_rows(areacode_start |>
                           left_join(nodes_city |>
                                       rename(from = node),
                                     by = col_names_city) |>
-                          add_column(date = int_end(interval),
+                          add_column(date = int_end(interval_graph_city),
                                      to = 1L)) |>
   select(date, type, from, to)
 
@@ -93,25 +93,23 @@ stopifnot(
 edges_city <- graph_city |>
   activate(edges) |>
   as_tibble()
-graph_city <- graph_city |>
-  mutate(interval = list(seq_len(n()), city_code) |>
-           pmap_vec(\(node, city_code) {
-             date_start <- edges_city |>
-               filter(to == node) |>
-               pull(date) |>
-               min()
-             date_end <- edges_city |>
-               filter(from == node) |>
-               pull(date) |>
-               max()
+date_start <- edges_city |>
+  summarise(date_start = min(date),
+            .by = to)
+date_end <- edges_city |>
+  summarise(date_end = max(date),
+            .by = from)
 
-             if (is.na(city_code)) {
-               NA_Date_ %--% NA_Date_
-             } else {
-               date_start %--% (date_end - days(1L))
-             }
-           },
-           .progress = TRUE))
+graph_city <- graph_city |>
+  mutate(node = row_number()) |>
+  left_join(date_start,
+            by = join_by(node == to)) |>
+  left_join(date_end,
+            by = join_by(node == from)) |>
+  mutate(interval = if_else(is.na(city_code),
+                            NA_Date_ %--% NA_Date_,
+                            date_start %--% date_end)) |>
+  select(!c(date_start, date_end))
 
 stopifnot(
   !graph_city |>
@@ -120,8 +118,3 @@ stopifnot(
     select(city_code, interval) |>
     vec_duplicate_any()
 )
-
-graph_city <- list(interval = interval,
-                   graph = graph_city)
-
-write_rds(graph_city, "data-raw/graph_city.rds")

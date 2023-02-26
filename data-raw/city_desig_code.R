@@ -23,5 +23,3 @@ city_desig_code <- city_code |>
               rename(city_desig_code = city_code),
             by = join_by(pref_name, city_desig_name, city_desig_name_kana)) |>
   select(city_code, city_desig_code)
-
-write_rds(city_desig_code, "data-raw/city_desig_code.rds")
