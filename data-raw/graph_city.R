@@ -97,7 +97,7 @@ date_start <- edges_city |>
   summarise(date_start = min(date),
             .by = to)
 date_end <- edges_city |>
-  summarise(date_end = max(date),
+  summarise(date_end = max(date) - days(1L),
             .by = from)
 
 graph_city <- graph_city |>
