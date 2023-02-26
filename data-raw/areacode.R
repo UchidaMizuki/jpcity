@@ -21,14 +21,15 @@ get_areacode <- function(date, exdir) {
   close_driver(driver, exdir)
 }
 
-date_start <- ymd("1970-04-01")
+date_start <- ymd("1970-04-01",
+                  tz = tz_jst)
 exdir_start <- "data-raw/areacode/areacode_start"
 get_areacode(date = date_start,
              exdir = exdir_start)
 areacode_start <- list(date = date_start,
                        areacode = read_areacode(exdir_start))
 
-date_end <- today()
+date_end <- today(tzone = tz_jst)
 exdir_end <- "data-raw/areacode/areacode_end"
 get_areacode(date = date_end,
              exdir = exdir_end)

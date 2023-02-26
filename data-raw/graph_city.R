@@ -107,7 +107,8 @@ graph_city <- graph_city |>
   left_join(date_end,
             by = join_by(node == from)) |>
   mutate(interval = if_else(is.na(city_code),
-                            NA_Date_ %--% NA_Date_,
+                            interval(NA_Date_, NA_Date_,
+                                     tzone = tz_jst),
                             date_start %--% date_end)) |>
   select(!c(date_start, date_end))
 

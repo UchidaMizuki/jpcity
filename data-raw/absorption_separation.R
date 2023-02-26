@@ -227,7 +227,8 @@ absorption_separation <- absorption_separation |>
 # okinawa_reversion -------------------------------------------------------
 
 # https://ja.wikipedia.org/wiki/%E6%B2%96%E7%B8%84%E8%BF%94%E9%82%84
-date_okinawa_reversion <- ymd("1972-06-07")
+date_okinawa_reversion <- ymd("1972-06-07",
+                              tz = tz_jst)
 
 exdir <- "data-raw/absorption_separation/okinawa_reversion"
 driver <- new_driver(exdir)
@@ -253,7 +254,8 @@ absorption_separation_okinawa_reversion <- tibble(date = absorption_separation_o
 
 # northern_territories ----------------------------------------------------
 
-date_northern_territories <- ymd("1983-04-01")
+date_northern_territories <- ymd("1983-04-01",
+                                 tz = tz_jst)
 
 exdir <- "data-raw/absorption_separation/northern_territories"
 driver <- new_driver(exdir)
