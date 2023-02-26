@@ -29,7 +29,8 @@ get_areacode(date = date_start,
 areacode_start <- list(date = date_start,
                        areacode = read_areacode(exdir_start))
 
-date_end <- today(tzone = tz_jst)
+date_end <- now(tzone = tz_jst) |>
+  floor_date("day")
 exdir_end <- "data-raw/areacode/areacode_end"
 get_areacode(date = date_end,
              exdir = exdir_end)
