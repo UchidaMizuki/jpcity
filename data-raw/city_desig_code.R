@@ -19,4 +19,5 @@ city_desig_code <- city_code |>
   inner_join(city_desig_code |>
               rename(city_desig_code = city_code),
             by = join_by(pref_name, city_desig_name, city_desig_name_kana)) |>
-  select(city_code, city_desig_code)
+  select(city_code, city_desig_code) |>
+  arrange(city_code)
