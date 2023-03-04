@@ -130,37 +130,68 @@ nodes_city <- graph_city |>
 size_nodes_city <- vec_size(nodes_city)
 
 nodes_city <- nodes_city |>
-  mutate(relatives = node |>
+  mutate(ancestors = node |>
            map(\(node) {
-             relatives_in <- graph_city |>
+             ancestors <- graph_city |>
                convert(to_local_neighborhood,
                        node = node,
                        order = size_nodes_city,
-                       mode = "in") |>
+                       mode = "in")
+             nodes_ancestors <- ancestors |>
+               activate(nodes) |>
                as_tibble()
+             edges_ancestors <- ancestors |>
+               activate(edges) |>
+               as_tibble()
+             if (vec_duplicate_any(edges_ancestors$from)) {
+               edges_ancestors <- edges_ancestors |>
+                 summarise(date = max(date),
+                           .by = from)
+             }
+             int_end(vec_slice(nodes_ancestors$interval, edges_ancestors$from)) <- edges_ancestors$date - days(1L)
 
-             relatives_out <- graph_city |>
+             nodes_ancestors |>
+               rename(node_relatives = .tidygraph_node_index) |>
+               select(interval, node_relatives)
+           },
+           .progress = TRUE),
+         descendants = node |>
+           map(\(node) {
+             descendants <- graph_city |>
                convert(to_local_neighborhood,
                        node = node,
                        order = size_nodes_city,
-                       mode = "out") |>
+                       mode = "out")
+             nodes_descendants <- descendants |>
+               activate(nodes) |>
                as_tibble()
+             edges_descendants <- descendants |>
+               activate(edges) |>
+               as_tibble()
+             if (vec_duplicate_any(edges_descendants$to)) {
+               edges_descendants <- edges_descendants |>
+                 summarise(date = min(date),
+                           .by = to)
+             }
+             int_start(vec_slice(nodes_descendants$interval, edges_descendants$to)) <- edges_descendants$date
 
-             vec_rbind(relatives_in,
-                       relatives_out) |>
-               vec_unique() |>
+             nodes_descendants |>
                rename(node_relatives = .tidygraph_node_index) |>
                select(interval, node_relatives)
            },
            .progress = TRUE))
 
-relatives_city <- nodes_city |>
-  select(node, relatives) |>
-  unnest(relatives)
+ancestors_city <- nodes_city |>
+  select(node, ancestors) |>
+  unnest(ancestors)
+
+descendants_city <- nodes_city |>
+  select(node, descendants) |>
+  unnest(descendants)
 
 interval_city_code <- nodes_city |>
-  summarise(interval = intersect_interval(interval),
+  summarise(interval = min(int_start(interval)) %--% max(int_end(interval)),
             .by = city_code)
 
 nodes_city <- nodes_city |>
-  select(!relatives)
+  select(!c(ancestors, descendants))
