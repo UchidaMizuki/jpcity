@@ -111,7 +111,8 @@ graph_city <- graph_city |>
                             interval(NA_Date_, NA_Date_,
                                      tzone = tz_jst),
                             date_start %--% date_end)) |>
-  select(!c(date_start, date_end))
+  select(!c(date_start, date_end)) |>
+  filter(!is.na(city_code))
 
 stopifnot(
   !graph_city |>
@@ -124,9 +125,42 @@ stopifnot(
 nodes_city <- graph_city |>
   activate("nodes") |>
   as_tibble() |>
-  rowid_to_column("node") |>
-  filter(!is.na(.data$city_code))
+  rowid_to_column("node")
+
+size_nodes_city <- vec_size(nodes_city)
+
+nodes_city <- nodes_city |>
+  mutate(relatives = node |>
+           map(\(node) {
+             relatives_in <- graph_city |>
+               convert(to_local_neighborhood,
+                       node = node,
+                       order = size_nodes_city,
+                       mode = "in") |>
+               as_tibble()
+
+             relatives_out <- graph_city |>
+               convert(to_local_neighborhood,
+                       node = node,
+                       order = size_nodes_city,
+                       mode = "out") |>
+               as_tibble()
+
+             vec_rbind(relatives_in,
+                       relatives_out) |>
+               vec_unique() |>
+               rename(node_relatives = .tidygraph_node_index) |>
+               select(interval, node_relatives)
+           },
+           .progress = TRUE))
+
+relatives_city <- nodes_city |>
+  select(node, relatives) |>
+  unnest(relatives)
 
 interval_city_code <- nodes_city |>
-  summarise(interval = min(int_start(interval)) %--% max(int_end(interval)),
+  summarise(interval = intersect_interval(interval),
             .by = city_code)
+
+nodes_city <- nodes_city |>
+  select(!relatives)
