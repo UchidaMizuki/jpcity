@@ -15,8 +15,8 @@ Depends:
 Imports: 
     cli,
     dplyr,
-    labelled,
     lubridate,
+    pillar,
     purrr,
     rlang,
     stringr,
