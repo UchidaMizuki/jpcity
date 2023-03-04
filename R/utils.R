@@ -9,17 +9,14 @@ assert_city <- function(city) {
 }
 
 intersect_interval <- function(interval) {
-  if (vec_is_empty(interval)) {
-    lubridate::interval(tzone = tz_jst)
-  } else {
-    start <- max(lubridate::int_start(interval),
-                 na.rm = TRUE)
-    end <- min(lubridate::int_end(interval),
+  start <- max(lubridate::int_start(interval),
                na.rm = TRUE)
-    if (start <= end) {
-      start %--% end
-    } else {
-      lubridate::NA_Date_ %--% lubridate::NA_Date_
-    }
+  end <- min(lubridate::int_end(interval),
+             na.rm = TRUE)
+
+  if (start <= end) {
+    start %--% end
+  } else {
+    lubridate::NA_Date_ %--% lubridate::NA_Date_
   }
 }

@@ -2,24 +2,32 @@
 parse_city <- function(city_code,
                        when = NULL) {
   if (is.null(when)) {
-    interval <- intersect_interval_city_code(city_code)
+    interval <- interval_city_code |>
+      dplyr::filter(.data$city_code %in% .env$city_code)
+    interval <- check_city_interval(city_code = interval$city_code,
+                                    interval = interval$interval)
   } else {
-    if (lubridate::is.interval(when)) {
+    if (is.character(when)) {
+      when <- lubridate::ymd(interval,
+                             tz = tz_jst)
+      interval <- when %--% when
+    } else if (lubridate::is.interval(when)) {
       interval <- when
     } else {
-      if (is.character(when)) {
-        when <- lubridate::ymd(when,
-                               tz = tz_jst)
-      }
-      interval <- when %--% when
+      interval <- lubridate::interval(interval, interval)
     }
   }
 
-  nodes_city <- nodes_city |>
-    dplyr::filter(.env$interval %within% .data$interval)
-  nodes_city <- vec_slice(nodes_city,
-                          i = vec_match(city_code, nodes_city$city_code))
+  data <- nodes_city |>
+    dplyr::filter(.data$city_code %in% .env$city_code,
+                  .env$interval %within% .data$interval)
 
-  new_city(city_code = nodes_city$city_code,
-           interval = interval)
+  interval <- check_city_interval(data$city_code, data$interval)
+
+  if (is.null(when)) {
+    cli::cli_inform(c("Guessing the interval to be {.val {interval}}.",
+                      "i" = "You can override using the {.arg when} argument."))
+  }
+  city(data = data,
+       interval = interval)
 }
