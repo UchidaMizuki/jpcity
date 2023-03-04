@@ -13,7 +13,8 @@ city_data <- function(city) {
              city_name_kana = field(city, "city_name_kana"))
 }
 
-check_city_interval <- function(city_code, interval) {
+check_city_interval <- function(city_code, interval,
+                                message_when = FALSE) {
   out <- intersect_interval(interval)
 
   if (!all(is.na(interval)) && is.na(out)) {
@@ -27,9 +28,14 @@ check_city_interval <- function(city_code, interval) {
     newest <- data |>
       dplyr::slice_max(.data$date_start,
                        n = 1L)
-    cli::cli_abort(c("Intervals of {.arg city_code} do not overlap.",
-                     "i" = "Oldest: {.val {oldest$city_code}} ({oldest$date_start}--{.strong {oldest$date_end}})",
-                     "i" = "Newest: {.val {newest$city_code}} ({.strong {newest$date_start}}--{newest$date_end})"))
+    message <- c("Intervals of {.arg city_code} must overlap.",
+                 "*" = "Oldest: {.val {oldest$city_code}} ({oldest$date_start}--{.strong {oldest$date_end}})",
+                 "*" = "Newest: {.val {newest$city_code}} ({.strong {newest$date_start}}--{newest$date_end})")
+    if (message_when) {
+      message <- c(message,
+                   "i" = "Specify {.arg when} argument")
+    }
+    cli::cli_abort(message)
   }
   out
 }
