@@ -1,6 +1,10 @@
 #' @export
 parse_city <- function(city_code,
-                       when = NULL) {
+                       when = NULL,
+                       na = c("", "NA")) {
+  city_code <- check_city_code(city_code,
+                               na = na)
+
   if (is.null(when)) {
     interval <- interval_city_code |>
       dplyr::filter(.data$city_code %in% .env$city_code)
@@ -19,8 +23,9 @@ parse_city <- function(city_code,
   }
 
   data <- nodes_city |>
-    dplyr::filter(.data$city_code %in% .env$city_code,
-                  .env$interval %within% .data$interval)
+    dplyr::filter(!is.na(lubridate::intersect(.data$interval, .env$interval)))
+  data <- vec_slice(data,
+                    vec_match(city_code, data$city_code))
 
   interval <- check_city_interval(data$city_code, data$interval)
 

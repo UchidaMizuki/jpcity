@@ -1,4 +1,13 @@
-check_city_code <- function(city_code) {
+check_city_code <- function(city_code,
+                            na = c("", "NA")) {
+  loc <- stringr::str_detect(city_code, "^\\d{5,6}$") | city_code %in% na
+  if (!all(loc, na.rm = TRUE)) {
+    message <- cli::format_inline("{vec_size(loc)} parsing failure{?s}")
+    footer <- data_frame(city_code = vec_slice(city_code, !loc))
+    rlang::warn(message,
+                footer = utils::capture.output(footer))
+  }
+
   # https://www.soumu.go.jp/main_content/000137948.pdf
   col_names_digit <- stringr::str_c("digit", 1:5,
                                     sep = "_")

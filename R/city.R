@@ -13,6 +13,33 @@ city_data <- function(city) {
              city_name_kana = field(city, "city_name_kana"))
 }
 
+check_city_interval <- function(city_code, interval) {
+  out <- intersect_interval(interval)
+
+  if (!all(is.na(interval)) && is.na(out)) {
+    data <- data_frame(city_code = city_code,
+                       interval = interval) |>
+      dplyr::mutate(date_start = lubridate::date(lubridate::int_start(interval)),
+                    date_end = lubridate::date(lubridate::int_end(interval)))
+    oldest <- data |>
+      dplyr::slice_min(.data$date_end,
+                       n = 1L)
+    newest <- data |>
+      dplyr::slice_max(.data$date_start,
+                       n = 1L)
+    cli::cli_abort(c("Intervals of {.arg city_code} do not overlap.",
+                     "i" = "Oldest: {.val {oldest$city_code}} ({oldest$date_start}--{.strong {oldest$date_end}})",
+                     "i" = "Newest: {.val {newest$city_code}} ({.strong {newest$date_start}}--{newest$date_end})"))
+  }
+  out
+}
+
+add_city_data <- function(data) {
+  data <- as.data.frame(data)
+  vec_slice(nodes_city,
+            vec_match(data, nodes_city[names2(data)]))
+}
+
 #' @export
 is_city <- function(x) {
   inherits_any(x, "jpcity_city")
@@ -20,7 +47,7 @@ is_city <- function(x) {
 
 #' @export
 vec_restore.jpcity_city <- function(x, to, ...) {
-  out <- add_city_interval(x)
+  out <- add_city_data(x)
   city(out,
        interval = check_city_interval(out$city_code, out$interval))
 }
@@ -30,7 +57,7 @@ c.jpcity_city <- function(...) {
   out <- list2(...) |>
     purrr::modify(city_data) |>
     purrr::list_c() |>
-    add_city_interval()
+    add_city_data()
   city(out,
        interval = check_city_interval(out$city_code, out$interval))
 }
