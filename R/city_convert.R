@@ -19,11 +19,11 @@ city_convert <- function(city, from, to) {
 
   if (from < to) {
     relatives <- descendants_city |>
-      dplyr::filter(node == node_relatives | from <= lubridate::int_start(interval),
+      dplyr::filter(.data$node == .data$node_relatives | from <= lubridate::int_start(.data$interval),
                     to %within% .data$interval)
   } else {
     relatives <- ancestors_city |>
-      dplyr::filter(node == node_relatives | from >= lubridate::int_end(interval),
+      dplyr::filter(.data$node == .data$node_relatives | from >= lubridate::int_end(.data$interval),
                     to %within% .data$interval)
   }
 

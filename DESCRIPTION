@@ -21,7 +21,6 @@ Imports:
     rlang,
     stringr,
     tibble,
-    tidygraph,
     vctrs
 Suggests: 
     testthat (>= 3.0.0)

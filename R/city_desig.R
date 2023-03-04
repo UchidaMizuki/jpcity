@@ -5,7 +5,7 @@ city_desig_merge <- function(city,
 
   city_desig_code <- city_desig_code |>
     dplyr::filter(merge_tokyo | city_desig_code != "13100") |>
-    select(!"interval")
+    dplyr::select(!"interval")
 
   data <- city |>
     city_data() |>
