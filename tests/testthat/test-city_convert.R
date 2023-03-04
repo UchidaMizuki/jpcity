@@ -1,0 +1,47 @@
+test_that("city_convert-01", {
+  out <- parse_city("01104") |>
+    city_convert("1989-11-04", "2020-01-01")
+  expect_equal(city_code(out[[1]]), c("01104", "01108"))
+
+  expect_error(
+    parse_city(c("01104", "01108")) |>
+      city_convert("1989-11-05", "2020-01-01")
+  )
+
+  out <- parse_city(c("01104", "01108")) |>
+    city_convert("1989-11-06", "2020-01-01")
+  expect_true(setequal(city_code(out[[1]]), c("01104", "01108")))
+  expect_equal(city_code(out[[2]]), "01108")
+})
+
+test_that("city_convert-02", {
+  city <- parse_city("04403")
+  from <- "1970-04-01"
+
+  out <- city_convert(city, from, "1971-10-31")[[1L]]
+  expect_equal(city_code(out), "04403")
+
+  out <- city_convert(city, from, "1971-11-01")[[1L]]
+  expect_equal(city_code(out), "04210")
+
+  out <- city_convert(city, from, "1988-03-01")[[1L]]
+  expect_equal(city_code(out), "04201")
+
+  out <- city_convert(city, from, "1989-04-01")[[1L]]
+  expect_equal(city_code(out), "04100")
+
+  city <- parse_city("04201")
+  from <- "1989-03-31"
+
+  out <- city_convert(city, from, "1988-03-01")[[1L]]
+  expect_equal(city_code(out), "04201")
+
+  out <- city_convert(city, from, "1988-02-28")[[1L]]
+  expect_true(setequal(city_code(out), c("04201", "04382", "04210")))
+
+  out <- city_convert(city, from, "1987-10-31")[[1L]]
+  expect_true(setequal(city_code(out), c("04201", "04382", "04210", "04405")))
+
+  out <- city_convert(city, from, "1971-10-31")[[1L]]
+  expect_true(setequal(city_code(out), c("04201", "04382", "04403", "04405")))
+})
