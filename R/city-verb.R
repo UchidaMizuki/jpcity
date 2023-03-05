@@ -46,67 +46,41 @@ pref_name <- function(city) {
 #' @param type Types of city names. By default, returns both designated city
 #' names (`"city_desig"`) and city names (`"city"`).
 #' @param sep Separator for city names.
+#' @param kana Whether to use hiragana or not?
 #'
 #' @return A `character` vector of city names.
 #'
 #' @export
 city_name <- function(city,
                       type = c("city_desig", "city"),
-                      sep = "") {
+                      sep = "",
+                      kana = FALSE) {
   assert_city(city)
   type <- arg_match(type, c("city_desig", "city"),
                     multiple = TRUE)
-
+  if (kana) {
+    city_desig_name <- "city_desig_name_kana"
+    city_name <- "city_name_kana"
+  } else {
+    city_desig_name <- "city_desig_name"
+    city_name <- "city_name"
+  }
   if ("city_desig" %in% type) {
-    city_desig_name <- field(city, "city_desig_name")
+    city_desig_name <- field(city, city_desig_name)
   }
   if ("city" %in% type) {
-    city_name <- field(city, "city_name")
+    city_name <- field(city, city_name)
   }
 
   if (setequal(type, c("city_desig", "city"))) {
     stringr::str_glue("{city_desig_name}", "{city_name}",
                       .na = "",
-                      .sep = sep)
+                      .sep = sep) |>
+      as.character()
   } else if (setequal(type, "city_desig")) {
     city_desig_name
   } else if (setequal(type, "city")) {
     city_name
-  }
-}
-
-#' Get city names in hiragana
-#'
-#' @param city A `jpcity_city` object.
-#' @param type Types of city names. By default, returns both designated city
-#' names (`"city_desig"`) and city names (`"city"`).
-#' @param sep Separator for city names.
-#'
-#' @return A `character` vector of city names in hiragana.
-#'
-#' @export
-city_name_kana <- function(city,
-                           type = c("city_desig", "city"),
-                           sep = "") {
-  assert_city(city)
-  type <- arg_match(type, c("city_desig", "city"),
-                    multiple = TRUE)
-
-  if ("city_desig" %in% type) {
-    city_desig_name_kana <- field(city, "city_desig_name_kana")
-  }
-  if ("city" %in% type) {
-    city_name_kana <- field(city, "city_name_kana")
-  }
-
-  if (setequal(type, c("city_desig", "city"))) {
-    stringr::str_glue("{city_desig_name_kana}", "{city_name_kana}",
-                      .na = "",
-                      .sep = sep)
-  } else if (setequal(type, "city_desig")) {
-    city_desig_name_kana
-  } else if (setequal(type, "city")) {
-    city_name_kana
   }
 }
 

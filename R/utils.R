@@ -22,6 +22,8 @@ intersect_interval <- function(interval) {
     vec_init(interval)
   } else if (size_interval == 1L) {
     interval
+  } else if (all(is.na(interval))) {
+    lubridate::NA_Date_ %--% lubridate::NA_Date_
   } else {
     start <- max(lubridate::int_start(interval),
                  na.rm = TRUE)
