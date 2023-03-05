@@ -46,7 +46,7 @@ add_city_data <- function(data) {
             vec_match(data, nodes_city[names2(data)]))
 }
 
-#' Test if the object is a city
+#' Test if the object is a jpcity_city object
 #'
 #' @param x An object.
 #'

@@ -2,7 +2,7 @@
 % Please edit documentation in R/city.R
 \name{is_city}
 \alias{is_city}
-\title{Test if the object is a city}
+\title{Test if the object is a jpcity_city object}
 \usage{
 is_city(x)
 }
@@ -13,5 +13,5 @@ is_city(x)
 \code{TRUE} if the object inherits from the \code{jpcity_city} class.
 }
 \description{
-Test if the object is a city
+Test if the object is a jpcity_city object
 }

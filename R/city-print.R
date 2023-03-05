@@ -21,7 +21,6 @@ obj_print_footer.jpcity_city <- function(x, ...) {
   invisible(x)
 }
 
-#' @importFrom pillar pillar_shaft
 #' @export
 pillar_shaft.jpcity_city <- function(x, ...) {
   city_code <- field(x, "city_code")

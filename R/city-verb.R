@@ -12,16 +12,20 @@ city_code <- function(city) {
 
 #' Get prefecture codes
 #'
-#' @param city A `jpcity_city` object.
+#' @param city A `jpcity_city` or `jpcity_pref` object.
 #'
 #' @return A integer vector of prefecture codes.
 #'
 #' @export
 pref_code <- function(city) {
-  assert_city(city)
-  city_code(city) |>
-    stringr::str_extract("^\\d{2}") |>
-    as.integer()
+  assert_city_or_pref(city)
+  if (is_city(city)) {
+    city_code(city) |>
+      stringr::str_extract("^\\d{2}") |>
+      as.integer()
+  } else if (is_pref(city)) {
+    field(city, "pref_code")
+  }
 }
 
 #' Get prefecture names
@@ -32,7 +36,7 @@ pref_code <- function(city) {
 #'
 #' @export
 pref_name <- function(city) {
-  assert_city(city)
+  assert_city_or_pref(city)
   field(city, "pref_name")
 }
 

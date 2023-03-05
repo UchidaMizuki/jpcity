@@ -7,7 +7,7 @@
 pref_code(city)
 }
 \arguments{
-\item{city}{A \code{jpcity_city} object.}
+\item{city}{A \code{jpcity_city} or \code{jpcity_pref} object.}
 }
 \value{
 A integer vector of prefecture codes.
