@@ -18,7 +18,7 @@ codes. This package provides the following features,
 - Convert to city codes at a different point in time: `city_convert()`
 - Combine wards of designated cities or divide them into wards:
   `city_desig_merge()`，`city_desig_split()`
-- Get city code at a specific point in time: `get_city()`
+- Get city codes at a specific point in time: `get_city()`
 - Find city codes using the name of the prefecture or city:
   `find_city()`
 
@@ -137,7 +137,7 @@ tibble(city = city,
 #> 3 23101 [愛知県名古屋市千種区] 23100 [愛知県名古屋市] 23100 [愛知県名古屋市]
 ```
 
-### Get city code at a specific point in time
+### Get city codes at a specific point in time
 
 ``` r
 tibble(city = get_city("2020-01-01"))
