@@ -1,0 +1,107 @@
+---
+output: github_document
+---
+
+<!-- README.md is generated from README.Rmd. Please edit that file -->
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>",
+  fig.path = "man/figures/README-",
+  out.width = "100%"
+)
+```
+
+# jpcity
+
+<!-- badges: start -->
+<!-- badges: end -->
+
+jpcityは，日本の市区町村コードの読み取り・変換を行うためのRパッケージです．
+このパッケージは，以下のような機能を提供しています．
+
+- 市区町村コードの読み取り：`parse_city()`
+  - `city_name()`や`pref_name()`を組み合わせることで市区町村名や都道府県名を取得可能
+- 異なる時点の市区町村コードへの変換（廃置分合処理）：`city_convert()`
+- 政令指定都市の区の集約・区への分割：`city_desig_merge()`，`city_desig_split()`
+- 特定時点の市区町村コードの取得：`get_city()`
+- 都道府県・市区町村名を用いた市区町村コードの検索：`find_city()`
+
+## Installation
+
+jpcityの開発版は，[GitHub](https://github.com/)からインストールすることができます．
+
+``` r
+# install.packages("devtools")
+devtools::install_github("UchidaMizuki/jpcity")
+```
+
+## Examples
+
+```{r setup, message=FALSE}
+library(jpcity)
+library(tidyverse)
+```
+
+### 市区町村コードの読み取り
+
+```{r parse_city}
+city <- parse_city(c("13101", "27101", "23101"))
+
+# Override the interval using `when` argument
+city <- parse_city(c("13101", "27101", "23101"),
+                   when = "1980-01-01")
+city
+
+tibble(city = city,
+       pref_name = pref_name(city),
+       city_name = city_name(city),
+       city_name_kana = city_name(city,
+                                  kana = TRUE))
+```
+
+### 異なる時点の市区町村コードへの変換（廃置分合処理）
+
+```{r city_convert}
+city <- parse_city(c("13101", "27101", "23101"),
+                   when = "1980-01-01")
+tibble(city_from = city,
+       city_to = city_convert(city,
+                              from = "1980-01-01",
+                              to = "2020-01-01")) |> 
+  unnest(city_to)
+
+city <- parse_city("15100",
+                   when = "2020-01-01")
+tibble(city_from = city,
+       city_to = city_convert(city,
+                              from = "2020-01-01",
+                              to = "1970-04-01")) |> 
+  unnest(city_to)
+```
+
+### 政令指定都市の区の集約・区への分割
+
+```{r city_desig_merge-city_desig_split}
+city <- parse_city(c("13101", "27101", "23101"),
+                   when = "1980-01-01")
+tibble(city = city,
+       city_desig = city_desig_merge(city),
+       city_desig_merge_tokyo = city_desig_merge(city,
+                                                 merge_tokyo = TRUE))
+```
+
+### 特定時点の市区町村コードの取得
+
+```{r get_city}
+tibble(city = get_city("2020-01-01"))
+
+tibble(city = get_city("1970-04-01"))
+```
+
+### 都道府県・市区町村名を用いた市区町村コードの検索
+
+```{r find_city}
+find_city(c("東京都", "新宿区"))
+```

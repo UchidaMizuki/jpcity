@@ -6,10 +6,12 @@ source("data-raw/setup.R")
 
 source("data-raw/graph_city.R")
 source("data-raw/city_desig_code.R")
+source("data-raw/string_pref_name.R")
 
 # internal ----------------------------------------------------------------
 
-usethis::use_data(interval_graph_city, graph_city, nodes_city, interval_city_code,
+usethis::use_data(interval_city, nodes_city, ancestors_city, descendants_city, interval_city_code,
                   city_desig_code,
+                  string_pref_name,
                   internal = TRUE,
                   overwrite = TRUE)

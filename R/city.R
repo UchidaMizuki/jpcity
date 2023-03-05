@@ -1,155 +1,75 @@
-city_data <- function(city_code,
-                      interval = NULL) {
-  if (is_city(city_code)) {
-    interval <- city_interval(city_code)
-    city_code <- city_code(city_code)
-  }
+city <- function(data, interval) {
+  new_rcrd(data[c("city_code", "pref_name", "city_desig_name", "city_desig_name_kana", "city_name", "city_name_kana")],
+           interval = interval,
+           class = "jpcity_city")
+}
 
-  nodes_city <- nodes_city |>
-    dplyr::filter(.data$city_code %in% .env$city_code,
-                  .env$interval %within% .data$interval)
-  if (vec_duplicate_any(nodes_city$city_code)) {
-    cli::cli_abort("{.arg city_code} must not be duplicated in {.arg interval}.")
-  }
+city_data <- function(city) {
+  data_frame(city_code = field(city, "city_code"),
+             pref_name = field(city, "pref_name"),
+             city_desig_name = field(city, "city_desig_name"),
+             city_desig_name_kana = field(city, "city_desig_name_kana"),
+             city_name = field(city, "city_name"),
+             city_name_kana = field(city, "city_name_kana"))
+}
 
+check_city_interval <- function(city_code, interval,
+                                message_when = FALSE) {
+  out <- intersect_interval(interval)
+
+  if (!all(is.na(interval)) && is.na(out)) {
+    data <- data_frame(city_code = city_code,
+                       interval = interval) |>
+      dplyr::mutate(date_start = lubridate::date(lubridate::int_start(interval)),
+                    date_end = lubridate::date(lubridate::int_end(interval)))
+    oldest <- data |>
+      dplyr::slice_min(.data$date_end,
+                       n = 1L)
+    newest <- data |>
+      dplyr::slice_max(.data$date_start,
+                       n = 1L)
+    message <- c("Intervals of {.arg city_code} must overlap.",
+                 "*" = "Oldest: {.val {oldest$city_code}} ({oldest$date_start}--{.strong {oldest$date_end}})",
+                 "*" = "Newest: {.val {newest$city_code}} ({.strong {newest$date_start}}--{newest$date_end})")
+    if (message_when) {
+      message <- c(message,
+                   "i" = "The {.arg when} argument must be given.")
+    }
+    cli::cli_abort(message)
+  }
+  out
+}
+
+add_city_data <- function(data) {
+  data <- as.data.frame(data)
   vec_slice(nodes_city,
-            i = vec_match(city_code, nodes_city$city_code))
+            vec_match(data, nodes_city[names2(data)]))
 }
 
-new_city <- function(city_code, interval) {
-  labels <- city_data(city_code = city_code,
-                      interval = interval) |>
-    dplyr::distinct(.data$city_code, .data$pref_name, .data$city_desig_name, .data$city_name)
-  labels <- labels$city_code |>
-    set_names(labels |>
-                stringr::str_glue_data("{pref_name}{city_desig_name}{city_name}",
-                                       .na = ""))
-
-  out <- labelled::labelled(city_code, labels,
-                            label = as.character(interval))
-  structure(out,
-            interval = interval,
-            class = c("jpcity_city", class(out)))
-}
-
-#' @export
-vec_restore.jpcity_city <- function(x, to, ...) {
-  new_city(x,
-           interval = intersect_interval_city_code(x))
-}
-
+#' Test if the object is a jpcity_city object
+#'
+#' @param x An object.
+#'
+#' @return `TRUE` if the object inherits from the `jpcity_city` class.
+#'
 #' @export
 is_city <- function(x) {
   inherits_any(x, "jpcity_city")
 }
 
 #' @export
-`==.jpcity_city` <- function(e1, e2) {
-  interval <- lubridate::intersect(city_interval(e1), city_interval(e2))
-  if (is.na(interval)) {
-    cli::cli_abort("Intervals of {.arg e1} and {.arg e2} must overlap.")
-  }
-  vec_equal(city_code(e1), city_code(e2))
+vec_restore.jpcity_city <- function(x, to, ...) {
+  out <- add_city_data(x)
+  city(out,
+       interval = check_city_interval(out$city_code, out$interval))
 }
 
 #' @export
 c.jpcity_city <- function(...) {
-  city_code <- list2(...) |>
-    purrr::modify(city_code) |>
-    purrr::list_c()
-  new_city(city_code,
-           interval = intersect_interval_city_code(city_code))
-}
-
-#' @export
-city_code <- function(city) {
-  assert_city(city)
-  as.character(city)
-}
-
-#' @export
-pref_code <- function(city) {
-  assert_city(city)
-  city_code(city) |>
-    stringr::str_extract("^\\d{2}") |>
-    as.integer()
-}
-
-#' @export
-pref_name <- function(city) {
-  assert_city(city)
-  city_data <- city_data(city)
-  city_data$pref_name
-}
-
-#' @export
-city_name <- function(city,
-                      type = c("city_desig", "city"),
-                      sep = "") {
-  assert_city(city)
-  type <- arg_match(type, c("city_desig", "city"),
-                    multiple = TRUE)
-
-  city_data <- city_data(city)
-  if ("city_desig" %in% type) {
-    city_desig_name <- city_data$city_desig_name
-    vec_slice(city_desig_name, is.na(city_desig_name)) <- ""
-  }
-  if ("city" %in% type) {
-    city_name <- city_data$city_name
-    vec_slice(city_name, is.na(city_name)) <- ""
-  }
-
-  if (setequal(type, c("city_desig", "city"))) {
-    stringr::str_c(city_desig_name, city_name,
-                   sep = sep)
-  } else if (setequal(type, "city_desig")) {
-    city_desig_name
-  } else if (setequal(type, "city")) {
-    city_name
-  }
-}
-
-#' @export
-city_name_kana <- function(city,
-                           type = c("city_desig", "city"),
-                           sep = "") {
-  assert_city(city)
-  type <- arg_match(type, c("city_desig", "city"),
-                    multiple = TRUE)
-
-  city_data <- city_data(city)
-  if ("city_desig" %in% type) {
-    city_desig_name_kana <- city_data$city_desig_name_kana
-    vec_slice(city_desig_name_kana, is.na(city_desig_name_kana)) <- ""
-  }
-  if ("city" %in% type) {
-    city_name_kana <- city_data$city_name_kana
-    vec_slice(city_name_kana, is.na(city_name_kana)) <- ""
-  }
-
-  if (setequal(type, c("city_desig", "city"))) {
-    stringr::str_c(city_desig_name_kana, city_name_kana,
-                   sep = sep)
-  } else if (setequal(type, "city_desig")) {
-    city_desig_name_kana
-  } else if (setequal(type, "city")) {
-    city_name_kana
-  }
-}
-
-#' @export
-city_interval <- function(city) {
-  assert_city(city)
-  attr(city, "interval")
-}
-
-#' @export
-vec_ptype_full.jpcity_city <- function(x, ...) {
-  "city"
-}
-
-#' @export
-vec_ptype_abbr.jpcity_city <- function(x, ...) {
-  "city"
+  out <- list2(...) |>
+    purrr::modify(city_data) |>
+    purrr::list_c() |>
+    add_city_data()
+  city(out,
+       interval = check_city_interval(out$city_code, out$interval))
 }

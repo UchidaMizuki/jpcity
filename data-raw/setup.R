@@ -4,6 +4,8 @@ library(tidygraph)
 library(tidyverse)
 library(vctrs)
 
+pkgload::load_all()
+
 # setup -------------------------------------------------------------------
 
 read_areacode <- function(exdir) {

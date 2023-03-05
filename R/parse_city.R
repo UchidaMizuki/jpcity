@@ -1,25 +1,46 @@
+#' Parse city codes
+#'
+#' @param city_code A `character` vector of city codes.
+#' @param when A `character` (year, month, and day components) or date-time
+#' object.
+#' @param na A `character` vector to be treated as missing values.
+#'
+#' @return A `jpcity_city` object.
+#'
 #' @export
 parse_city <- function(city_code,
-                       when = NULL) {
+                       when = NULL,
+                       na = c("", "NA")) {
+  city_code <- check_city_code(city_code,
+                               na = na)
+
   if (is.null(when)) {
-    interval <- intersect_interval_city_code(city_code)
+    interval <- interval_city_code |>
+      dplyr::filter(.data$city_code %in% .env$city_code)
+    interval <- check_city_interval(city_code = interval$city_code,
+                                    interval = interval$interval,
+                                    message_when = TRUE)
   } else {
+    when <- parse_ymd(when)
+
     if (lubridate::is.interval(when)) {
       interval <- when
     } else {
-      if (is.character(when)) {
-        when <- lubridate::ymd(when,
-                               tz = tz_jst)
-      }
       interval <- when %--% when
     }
   }
 
-  nodes_city <- nodes_city |>
-    dplyr::filter(.env$interval %within% .data$interval)
-  nodes_city <- vec_slice(nodes_city,
-                          i = vec_match(city_code, nodes_city$city_code))
+  data <- nodes_city |>
+    dplyr::filter(!is.na(lubridate::intersect(.data$interval, .env$interval)),
+                  .data$city_code %in% .env$city_code)
+  interval <- check_city_interval(data$city_code, data$interval)
+  if (is.null(when)) {
+    cli::cli_inform(c("Guessing the interval to be {.val {interval}}.",
+                      "i" = "You can override using {.arg when} argument."))
+  }
 
-  new_city(city_code = nodes_city$city_code,
-           interval = interval)
+  data <- vec_slice(data,
+                    vec_match(city_code, data$city_code))
+  city(data = data,
+       interval = interval)
 }

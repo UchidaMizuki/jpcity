@@ -1,4 +1,13 @@
-check_city_code <- function(city_code) {
+check_city_code <- function(city_code,
+                            na = c("", "NA")) {
+  loc <- stringr::str_detect(city_code, "^\\d{5,6}$") | city_code %in% na
+  if (!all(loc, na.rm = TRUE)) {
+    message <- cli::format_inline("{vec_size(loc)} parsing failure{?s}")
+    footer <- data_frame(city_code = vec_slice(city_code, !loc))
+    rlang::warn(message,
+                footer = utils::capture.output(footer))
+  }
+
   # https://www.soumu.go.jp/main_content/000137948.pdf
   col_names_digit <- stringr::str_c("digit", 1:5,
                                     sep = "_")
@@ -34,43 +43,4 @@ check_city_code <- function(city_code) {
                  footer = utils::capture.output(error_city_code))
   }
   city_code$city_code
-}
-
-intersect_interval_city_code <- function(city_code) {
-  interval_city_code <- interval_city_code |>
-    dplyr::filter(.data$city_code %in% .env$city_code)
-
-  if (vec_is_empty(interval_city_code)) {
-    NULL
-  } else {
-    check_interval_city_code(city_code = interval_city_code$city_code,
-                             interval = interval_city_code$interval)
-  }
-}
-
-check_interval_city_code <- function(city_code, interval) {
-  interval_city_code <- data_frame(city_code = city_code,
-                                   interval = interval)
-
-  out <- interval_city_code |>
-    dplyr::pull("interval") |>
-    purrr::discard(is.na) |>
-    intersect_interval()
-
-  if (is.na(out)) {
-    interval_city_code <- interval_city_code |>
-      dplyr::mutate(date_start = lubridate::date(lubridate::int_start(interval)),
-                    date_end = lubridate::date(lubridate::int_end(interval)))
-    oldest <- interval_city_code |>
-      dplyr::slice_min(.data$date_end,
-                       n = 1L)
-    newest <- interval_city_code |>
-      dplyr::slice_max(.data$date_start,
-                       n = 1L)
-    cli::cli_abort(c("Intervals of {.arg city_code} do not overlap.",
-                     "i" = "Oldest: {.val {oldest$city_code}} ({oldest$date_start}--{.strong {oldest$date_end}})",
-                     "i" = "Newest: {.val {newest$city_code}} ({.strong {newest$date_start}}--{newest$date_end})"))
-  } else {
-    out
-  }
 }

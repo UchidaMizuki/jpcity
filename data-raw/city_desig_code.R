@@ -3,7 +3,7 @@ source("data-raw/setup.R")
 # city_desig_code ---------------------------------------------------------
 
 city_code <- nodes_city |>
-  select(!interval) |>
+  select(!node) |>
   mutate(city_desig_name = if_else(str_starts(city_code, "131"),
                                    "特別区部",
                                    city_desig_name),
@@ -17,7 +17,8 @@ city_desig_code <- city_code |>
 
 city_desig_code <- city_code |>
   inner_join(city_desig_code |>
-              rename(city_desig_code = city_code),
+              rename(city_desig_code = city_code,
+                     interval_desig = interval),
             by = join_by(pref_name, city_desig_name, city_desig_name_kana)) |>
-  select(city_code, city_desig_code) |>
+  select(city_code, city_desig_code, interval, interval_desig) |>
   arrange(city_code)

@@ -25,9 +25,9 @@ areacode_start <- read_rds("data-raw/areacode/areacode_start.rds")
 areacode_end <- read_rds("data-raw/areacode/areacode_end.rds")
 absorption_separation <- read_rds("data-raw/absorption_separation.rds")
 
-interval_graph_city <- absorption_separation$interval
+interval_city <- absorption_separation$interval
 
-stopifnot(areacode_start$date %--% areacode_end$date == interval_graph_city)
+stopifnot(areacode_start$date %--% areacode_end$date == interval_city)
 
 areacode_start <- tidy_city(areacode_start$areacode) |>
   vec_unique() |>
@@ -53,7 +53,7 @@ edges_city <- bind_rows(areacode_start |>
                           left_join(nodes_city |>
                                       rename(to = node),
                                     by = col_names_city) |>
-                          add_column(date = int_start(interval_graph_city),
+                          add_column(date = int_start(interval_city),
                                      type = "start",
                                      from = 1L),
                         absorption_separation |>
@@ -69,7 +69,7 @@ edges_city <- bind_rows(areacode_start |>
                           left_join(nodes_city |>
                                       rename(from = node),
                                     by = col_names_city) |>
-                          add_column(date = int_end(interval_graph_city),
+                          add_column(date = int_end(interval_city),
                                      to = 1L)) |>
   select(date, type, from, to)
 
@@ -111,7 +111,8 @@ graph_city <- graph_city |>
                             interval(NA_Date_, NA_Date_,
                                      tzone = tz_jst),
                             date_start %--% date_end)) |>
-  select(!c(date_start, date_end))
+  select(!c(date_start, date_end)) |>
+  filter(!is.na(city_code))
 
 stopifnot(
   !graph_city |>
@@ -124,9 +125,73 @@ stopifnot(
 nodes_city <- graph_city |>
   activate("nodes") |>
   as_tibble() |>
-  rowid_to_column("node") |>
-  filter(!is.na(.data$city_code))
+  rowid_to_column("node")
+
+size_nodes_city <- vec_size(nodes_city)
+
+nodes_city <- nodes_city |>
+  mutate(ancestors = node |>
+           map(\(node) {
+             ancestors <- graph_city |>
+               convert(to_local_neighborhood,
+                       node = node,
+                       order = size_nodes_city,
+                       mode = "in")
+             nodes_ancestors <- ancestors |>
+               activate(nodes) |>
+               as_tibble()
+             edges_ancestors <- ancestors |>
+               activate(edges) |>
+               as_tibble()
+             if (vec_duplicate_any(edges_ancestors$from)) {
+               edges_ancestors <- edges_ancestors |>
+                 summarise(date = max(date),
+                           .by = from)
+             }
+             int_end(vec_slice(nodes_ancestors$interval, edges_ancestors$from)) <- edges_ancestors$date - days(1L)
+
+             nodes_ancestors |>
+               rename(node_relatives = .tidygraph_node_index) |>
+               select(interval, node_relatives)
+           },
+           .progress = TRUE),
+         descendants = node |>
+           map(\(node) {
+             descendants <- graph_city |>
+               convert(to_local_neighborhood,
+                       node = node,
+                       order = size_nodes_city,
+                       mode = "out")
+             nodes_descendants <- descendants |>
+               activate(nodes) |>
+               as_tibble()
+             edges_descendants <- descendants |>
+               activate(edges) |>
+               as_tibble()
+             if (vec_duplicate_any(edges_descendants$to)) {
+               edges_descendants <- edges_descendants |>
+                 summarise(date = min(date),
+                           .by = to)
+             }
+             int_start(vec_slice(nodes_descendants$interval, edges_descendants$to)) <- edges_descendants$date
+
+             nodes_descendants |>
+               rename(node_relatives = .tidygraph_node_index) |>
+               select(interval, node_relatives)
+           },
+           .progress = TRUE))
+
+ancestors_city <- nodes_city |>
+  select(node, ancestors) |>
+  unnest(ancestors)
+
+descendants_city <- nodes_city |>
+  select(node, descendants) |>
+  unnest(descendants)
 
 interval_city_code <- nodes_city |>
   summarise(interval = min(int_start(interval)) %--% max(int_end(interval)),
             .by = city_code)
+
+nodes_city <- nodes_city |>
+  select(!c(ancestors, descendants))
