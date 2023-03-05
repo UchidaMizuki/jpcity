@@ -33,7 +33,7 @@ check_city_interval <- function(city_code, interval,
                  "*" = "Newest: {.val {newest$city_code}} ({.strong {newest$date_start}}--{newest$date_end})")
     if (message_when) {
       message <- c(message,
-                   "i" = "Specify {.arg when} argument")
+                   "i" = "The {.arg when} argument must be given.")
     }
     cli::cli_abort(message)
   }

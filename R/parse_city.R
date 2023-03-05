@@ -9,7 +9,8 @@ parse_city <- function(city_code,
     interval <- interval_city_code |>
       dplyr::filter(.data$city_code %in% .env$city_code)
     interval <- check_city_interval(city_code = interval$city_code,
-                                    interval = interval$interval)
+                                    interval = interval$interval,
+                                    message_when = TRUE)
   } else {
     when <- parse_ymd(when)
 

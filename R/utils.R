@@ -35,8 +35,8 @@ parse_ymd <- function(when) {
     when <- lubridate::ymd(when,
                            tz = tz_jst)
   }
-  if (when %within% interval_graph_city) {
-
+  if (!when %within% interval_city) {
+    cli::cli_abort("{.arg when} must be within {.val {interval_city}}")
   }
   when
 }
