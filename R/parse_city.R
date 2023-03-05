@@ -11,14 +11,12 @@ parse_city <- function(city_code,
     interval <- check_city_interval(city_code = interval$city_code,
                                     interval = interval$interval)
   } else {
-    if (is.character(when)) {
-      when <- lubridate::ymd(when,
-                             tz = tz_jst)
-      interval <- when %--% when
-    } else if (lubridate::is.interval(when)) {
+    when <- parse_ymd(when)
+
+    if (lubridate::is.interval(when)) {
       interval <- when
     } else {
-      interval <- lubridate::interval(interval, interval)
+      interval <- when %--% when
     }
   }
 

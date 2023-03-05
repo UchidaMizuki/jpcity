@@ -27,3 +27,16 @@ intersect_interval <- function(interval) {
     }
   }
 }
+
+parse_ymd <- function(when) {
+  if (is.null(when)) {
+    cli::cli_abort("{.arg when} must not be NULL.")
+  } else if (is.character(when)) {
+    when <- lubridate::ymd(when,
+                           tz = tz_jst)
+  }
+  if (when %within% interval_graph_city) {
+
+  }
+  when
+}

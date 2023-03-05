@@ -1,13 +1,7 @@
 #' @export
 city_convert <- function(city, from, to) {
-  if (is.character(from)) {
-    from <- lubridate::ymd(from,
-                           tz = tz_jst)
-  }
-  if (is.character(to)) {
-    to <- lubridate::ymd(to,
-                           tz = tz_jst)
-  }
+  from <- parse_ymd(from)
+  to <- parse_ymd(to)
 
   if (!from %within% city_interval(city, intersect = TRUE)) {
     cli::cli_abort("{.arg from} must be within the interval of {.arg city}.")
