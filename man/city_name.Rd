@@ -4,7 +4,7 @@
 \alias{city_name}
 \title{Get city names}
 \usage{
-city_name(city, type = c("city_desig", "city"), sep = "")
+city_name(city, type = c("city_desig", "city"), sep = "", kana = FALSE)
 }
 \arguments{
 \item{city}{A \code{jpcity_city} object.}
@@ -13,6 +13,8 @@ city_name(city, type = c("city_desig", "city"), sep = "")
 names (\code{"city_desig"}) and city names (\code{"city"}).}
 
 \item{sep}{Separator for city names.}
+
+\item{kana}{Whether to use hiragana or not?}
 }
 \value{
 A \code{character} vector of city names.
