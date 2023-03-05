@@ -1,11 +1,13 @@
 Package: jpcity
 Type: Package
-Title: What the Package Does (Title Case)
+Title: Read and Convert Japanese Municipality Codes
 Version: 0.1.0
 Author: Who wrote it
 Maintainer: The package maintainer <yourself@somewhere.net>
-Description: More about what it does (maybe more than one line)
-    Use four spaces when indenting paragraphs within the Description.
+Description: Read Japanese city codes to get city and prefecture names, or 
+    convert to city codes at different points in time. In addition, it merges or
+    splits wards of designated cities and gets all city codes at a specific 
+    point in time.
 License: MIT + file LICENSE
 Encoding: UTF-8
 LazyData: true

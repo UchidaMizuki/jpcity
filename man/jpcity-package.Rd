@@ -4,8 +4,8 @@
 \name{jpcity-package}
 \alias{jpcity}
 \alias{jpcity-package}
-\title{jpcity: What the Package Does (Title Case)}
+\title{jpcity: Read and Convert Japanese Municipality Codes}
 \description{
-More about what it does (maybe more than one line) Use four spaces when indenting paragraphs within the Description.
+Read Japanese city codes to get city and prefecture names, or convert to city codes at different points in time. In addition, it merges or splits wards of designated cities and gets all city codes at a specific point in time.
 }
 \keyword{internal}
