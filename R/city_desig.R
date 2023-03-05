@@ -1,3 +1,16 @@
+#' Merge designated city wards
+#'
+#' @param city A `jpcity_city` object.
+#' @param merge_tokyo Whether to merge Tokyo special wards?
+#'
+#' @return A `jpcity_city` object.
+#'
+#' @examples
+#' city <- parse_city(c("01101", "13101"))
+#' city_desig_merge(city)
+#' city_desig_merge(city,
+#'                  merge_tokyo = TRUE)
+#'
 #' @export
 city_desig_merge <- function(city,
                              merge_tokyo = FALSE) {
@@ -22,6 +35,19 @@ city_desig_merge <- function(city,
              when = intersect_interval(data$interval))
 }
 
+#' Split designated cities into wards
+#'
+#' @param city A `jpcity_city` object.
+#' @param split_tokyo Whether to split into Tokyo special wards?
+#'
+#' @return A list of a `jpcity_city` object.
+#'
+#' @examples
+#' city <- parse_city(c("01100", "13100"))
+#' city_desig_split(city)
+#' city_desig_split(city,
+#'                  split_tokyo = FALSE)
+#'
 #' @export
 city_desig_split <- function(city,
                              split_tokyo = TRUE) {

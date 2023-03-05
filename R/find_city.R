@@ -1,3 +1,12 @@
+#' Find cities by string patterns
+#'
+#' @param patterns Patterns to look for. If multiple patterns are given, find
+#' the cities that match all patterns.
+#' @param when A `character` (year, month, and day components) or date-time
+#' object.
+#'
+#' @return A `jpcity_city` object.
+#'
 #' @export
 find_city <- function(patterns,
                       when = NULL) {

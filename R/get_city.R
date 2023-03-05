@@ -1,3 +1,13 @@
+#' Get cities at a specific point in time
+#'
+#' @param when A `character` (year, month, and day components) or date-time
+#' object.
+#'
+#' @return A `jpcity_city` object.
+#'
+#' @examples
+#' get_city("2020-01-01")
+#'
 #' @export
 get_city <- function(when) {
   when <- parse_ymd(when)

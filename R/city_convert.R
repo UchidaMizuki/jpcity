@@ -1,3 +1,19 @@
+#' Convert to cities at different points in time
+#'
+#' @param city A `jpcity_city` object.
+#' @param from A `character` (year, month, and day components) or date-time
+#' object of the starting date.
+#' @param to A `character` (year, month, and day components) or date-time
+#' object of the ending date.
+#'
+#' @return A list of a `jpcity_city` object.
+#'
+#' @examples
+#' city <- parse_city(c("01201", "01202"))
+#' city_convert(city,
+#'              from = "1970-04-01",
+#'              to = "2020-01-01")
+#'
 #' @export
 city_convert <- function(city, from, to) {
   from <- parse_ymd(from)

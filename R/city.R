@@ -46,6 +46,12 @@ add_city_data <- function(data) {
             vec_match(data, nodes_city[names2(data)]))
 }
 
+#' Test if the object is a city
+#'
+#' @param x An object.
+#'
+#' @return `TRUE` if the object inherits from the `jpcity_city` class.
+#'
 #' @export
 is_city <- function(x) {
   inherits_any(x, "jpcity_city")

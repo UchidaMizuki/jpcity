@@ -1,9 +1,21 @@
+#' Get city codes
+#'
+#' @param city A `jpcity_city` object.
+#'
+#' @return A `character` vector of city codes.
+#'
 #' @export
 city_code <- function(city) {
   assert_city(city)
   field(city, "city_code")
 }
 
+#' Get prefecture codes
+#'
+#' @param city A `jpcity_city` object.
+#'
+#' @return A integer vector of prefecture codes.
+#'
 #' @export
 pref_code <- function(city) {
   assert_city(city)
@@ -12,12 +24,27 @@ pref_code <- function(city) {
     as.integer()
 }
 
+#' Get prefecture names
+#'
+#' @param city A `jpcity_city` object.
+#'
+#' @return A `character` vector of prefecture names.
+#'
 #' @export
 pref_name <- function(city) {
   assert_city(city)
   field(city, "pref_name")
 }
 
+#' Get city names
+#'
+#' @param city A `jpcity_city` object.
+#' @param type Types of city names. By default, returns both designated city
+#' names (`"city_desig"`) and city names (`"city"`).
+#' @param sep Separator for city names.
+#'
+#' @return A `character` vector of city names.
+#'
 #' @export
 city_name <- function(city,
                       type = c("city_desig", "city"),
@@ -44,6 +71,15 @@ city_name <- function(city,
   }
 }
 
+#' Get city names in hiragana
+#'
+#' @param city A `jpcity_city` object.
+#' @param type Types of city names. By default, returns both designated city
+#' names (`"city_desig"`) and city names (`"city"`).
+#' @param sep Separator for city names.
+#'
+#' @return A `character` vector of city names in hiragana.
+#'
 #' @export
 city_name_kana <- function(city,
                            type = c("city_desig", "city"),
@@ -70,6 +106,13 @@ city_name_kana <- function(city,
   }
 }
 
+#' Get city duration
+#'
+#' @param city A `jpcity_city` object.
+#' @param intersect Whether to get the common part of the duration of cities.
+#'
+#' @return A `interval` vector of the duration of cities.
+#'
 #' @export
 city_interval <- function(city,
                           intersect = FALSE) {

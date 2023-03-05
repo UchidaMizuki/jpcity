@@ -1,3 +1,12 @@
+#' Parse city codes
+#'
+#' @param city_code A `character` vector of city codes.
+#' @param when A `character` (year, month, and day components) or date-time
+#' object.
+#' @param na A `character` vector to be treated as missing values.
+#'
+#' @return A `jpcity_city` object.
+#'
 #' @export
 parse_city <- function(city_code,
                        when = NULL,
