@@ -6,6 +6,9 @@
 <!-- badges: start -->
 <!-- badges: end -->
 
+README in Japanese is
+[here](https://github.com/UchidaMizuki/jpcity/blob/main/README-ja.md).
+
 jpcity is an R package for reading and converting Japanese municipality
 codes. This package provides the following features,
 
