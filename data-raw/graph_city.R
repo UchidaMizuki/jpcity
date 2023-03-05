@@ -25,9 +25,9 @@ areacode_start <- read_rds("data-raw/areacode/areacode_start.rds")
 areacode_end <- read_rds("data-raw/areacode/areacode_end.rds")
 absorption_separation <- read_rds("data-raw/absorption_separation.rds")
 
-interval_graph_city <- absorption_separation$interval
+interval_city <- absorption_separation$interval
 
-stopifnot(areacode_start$date %--% areacode_end$date == interval_graph_city)
+stopifnot(areacode_start$date %--% areacode_end$date == interval_city)
 
 areacode_start <- tidy_city(areacode_start$areacode) |>
   vec_unique() |>
@@ -53,7 +53,7 @@ edges_city <- bind_rows(areacode_start |>
                           left_join(nodes_city |>
                                       rename(to = node),
                                     by = col_names_city) |>
-                          add_column(date = int_start(interval_graph_city),
+                          add_column(date = int_start(interval_city),
                                      type = "start",
                                      from = 1L),
                         absorption_separation |>
@@ -69,7 +69,7 @@ edges_city <- bind_rows(areacode_start |>
                           left_join(nodes_city |>
                                       rename(from = node),
                                     by = col_names_city) |>
-                          add_column(date = int_end(interval_graph_city),
+                          add_column(date = int_end(interval_city),
                                      to = 1L)) |>
   select(date, type, from, to)
 
