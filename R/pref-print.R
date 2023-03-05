@@ -14,12 +14,12 @@ obj_print_footer.jpcity_pref <- function(x, ...) {
 
 #' @export
 pillar_shaft.jpcity_pref <- function(x, ...) {
-  city_code <- field(x, "pref_code")
+  pref_code <- field(x, "pref_code")
   pref_name <- field(x, "pref_name")
 
   pref_name <- stringr::str_glue("[{pref_name}]",
                                  .na = "")
-  formatted <- stringr::str_c(city_code, pillar::style_subtle(pref_name),
+  formatted <- stringr::str_c(stringr::str_pad(pref_code, 2L), pillar::style_subtle(pref_name),
                               sep = " ")
   pillar::new_pillar_shaft_simple(formatted)
 }
