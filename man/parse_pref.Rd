@@ -2,16 +2,16 @@
 % Please edit documentation in R/pref.R
 \name{parse_pref}
 \alias{parse_pref}
-\title{Parse prefecture names}
+\title{Parse prefecture codes or names}
 \usage{
 parse_pref(pref_name)
 }
 \arguments{
-\item{pref_name}{A \code{character} vector of prefecture names.}
+\item{pref_name}{A \code{character} vector of prefecture codes or names.}
 }
 \value{
 A \code{jpcity_pref} object.
 }
 \description{
-Parse prefecture names
+Parse prefecture codes or names
 }

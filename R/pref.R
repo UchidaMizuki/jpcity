@@ -36,9 +36,9 @@ as_pref <- function(x) {
   pref(data)
 }
 
-#' Parse prefecture names
+#' Parse prefecture codes or names
 #'
-#' @param pref_name A `character` vector of prefecture names.
+#' @param pref_name A `character` vector of prefecture codes or names.
 #'
 #' @return A `jpcity_pref` object.
 #'
@@ -47,5 +47,7 @@ parse_pref <- function(pref_name) {
   pref_code <- dplyr::case_when(stringr::str_detect(pref_name, "^\\d+$") | is_integerish(pref_name) ~ purrr::quietly(as.integer)(pref_name)$result,
                                 is.character(pref_name) ~ vec_slice(string_pref_name$pref_code,
                                                                     vec_match(extract_pref_name(pref_name), string_pref_name$string_pref_name)))
-  as_pref(pref_code)
+  data <- vec_slice(string_pref_name,
+                    vec_match(pref_code, string_pref_name$pref_code))
+  pref(data)
 }

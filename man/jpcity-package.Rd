@@ -6,6 +6,8 @@
 \alias{jpcity-package}
 \title{jpcity: Read and Convert Japanese Municipality Codes}
 \description{
+\if{html}{\figure{logo.png}{options: style='float: right' alt='logo' width='120'}}
+
 Read Japanese city codes to get city and prefecture names, or convert to city codes at different points in time. In addition, it merges or splits wards of designated cities and gets all city codes at a specific point in time.
 }
 \seealso{
