@@ -2,12 +2,12 @@ Package: jpcity
 Type: Package
 Title: Read and Convert Japanese Municipality Codes
 Version: 0.1.0
-Author: Who wrote it
+Authors@R: person("Mizuki", "Uchida", email = "uchidamizuki@vivaldi.net", role = c("aut", "cre"))
 Maintainer: The package maintainer <yourself@somewhere.net>
-Description: Read Japanese city codes to get city and prefecture names, or 
-    convert to city codes at different points in time. In addition, it merges or
-    splits wards of designated cities and gets all city codes at a specific 
-    point in time.
+Description: Read Japanese city codes (<https://www.e-stat.go.jp/municipalities/cities>) 
+    to get city and prefecture names, or convert to city codes at different 
+    points in time. In addition, it merges or splits wards of designated cities
+    and gets all city codes at a specific point in time.
 License: MIT + file LICENSE
 Encoding: UTF-8
 LazyData: true

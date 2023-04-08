@@ -8,13 +8,17 @@
 \description{
 \if{html}{\figure{logo.png}{options: style='float: right' alt='logo' width='120'}}
 
-Read Japanese city codes to get city and prefecture names, or convert to city codes at different points in time. In addition, it merges or splits wards of designated cities and gets all city codes at a specific point in time.
+Read Japanese city codes (\url{https://www.e-stat.go.jp/municipalities/cities}) to get city and prefecture names, or convert to city codes at different points in time. In addition, it merges or splits wards of designated cities and gets all city codes at a specific point in time.
 }
 \seealso{
 Useful links:
 \itemize{
   \item \url{https://uchidamizuki.github.io/jpcity/}
 }
+
+}
+\author{
+\strong{Maintainer}: Mizuki Uchida \email{uchidamizuki@vivaldi.net}
 
 }
 \keyword{internal}
