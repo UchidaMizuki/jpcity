@@ -25,6 +25,11 @@ areacode_start <- read_rds("data-raw/areacode/areacode_start.rds")
 areacode_end <- read_rds("data-raw/areacode/areacode_end.rds")
 absorption_separation <- read_rds("data-raw/absorption_separation.rds")
 
+# Anamizu Town (17421) and Monzen Town (17422) in Hosi-gun were changed to Anamizu Town (17461) and Monzen Town (17462) in Hozu-gun.
+absorption_separation$absorption_separation <- absorption_separation$absorption_separation |>
+  filter(date != "2005-03-01" | is.na(from$city_code) | from$city_code != "17421" | to$city_code == "17461",
+         date != "2005-03-01" | is.na(from$city_code) | from$city_code != "17422" | to$city_code == "17462")
+
 interval_city <- absorption_separation$interval
 
 stopifnot(areacode_start$date %--% areacode_end$date == interval_city)

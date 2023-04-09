@@ -49,14 +49,23 @@ test_that("city_convert-02", {
   city <- parse_city("01206")
 
   out <- city_convert(city, "2020-10-01", "2020-10-01")
-  expect_length(out, 1L)
-  expect_equal(city_code(out[[1L]]), "01206")
+  out <- out[[1L]]
+  expect_length(out[[1L]], 1L)
+  expect_equal(city_code(out[1L]), "01206")
 
   out <- city_convert(city, "2020-10-01", "2005-10-11")
-  expect_length(out, 1L)
+  out <- out[[1L]]
+  expect_length(out[[1L]], 1L)
   expect_equal(city_code(out[[1L]]), "01206")
 
   out <- city_convert(city, "2020-10-01", lubridate::int_end(interval_city) - lubridate::days(1L))
-  expect_length(out, 1L)
+  out <- out[[1L]]
+  expect_length(out[[1L]], 1L)
   expect_equal(city_code(out[[1L]]), "01206")
+
+  # Anamizu Town and Monzen Town
+  city <- parse_city(c("17421", "17422"))
+  out <- city_convert(city, "2005-02-28", "2005-03-01")
+  expect_length(out[[1L]], 1L)
+  expect_length(out[[2L]], 1L)
 })
