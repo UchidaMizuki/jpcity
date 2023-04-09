@@ -59,9 +59,13 @@ is_city <- function(x) {
 
 #' @export
 vec_restore.jpcity_city <- function(x, to, ...) {
-  out <- add_city_data(x)
-  city(out,
-       interval = check_city_interval(out$city_code, out$interval))
+  if (vec_is_empty(x)) {
+    city_empty
+  } else {
+    out <- add_city_data(x)
+    city(out,
+         interval = check_city_interval(out$city_code, out$interval))
+  }
 }
 
 #' @export

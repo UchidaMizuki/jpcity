@@ -1,4 +1,11 @@
 tz_jst <- "Asia/Tokyo"
+city_empty <- city(list(city_code = character(),
+                        pref_name = character(),
+                        city_desig_name = character(),
+                        city_desig_name_kana = character(),
+                        city_name = character(),
+                        city_name_kana = character()),
+                   interval = lubridate::interval(tzone = tz_jst))
 
 assert_city <- function(city) {
   name <- as_name(enquo(city))
