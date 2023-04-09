@@ -68,10 +68,10 @@
     <div class="section level2">
     <h2 id="ref-examples">Examples<a class="anchor" aria-label="anchor" href="#ref-examples"></a></h2>
     <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="va">city</span> <span class="op">&lt;-</span> <span class="fu"><a href="parse_city.html">parse_city</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"01101"</span>, <span class="st">"13101"</span><span class="op">)</span><span class="op">)</span></span></span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Guessing the interval to be <span style="color: #0000BB;">1972-04-01 JST--2023-04-07 JST</span>.</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> Guessing the interval to be <span style="color: #0000BB;">1972-04-01 JST--2023-04-09 JST</span>.</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BBBB;">ℹ</span> You can override using `when` argument.</span>
 <span class="r-in"><span><span class="fu">city_desig_merge</span><span class="op">(</span><span class="va">city</span><span class="op">)</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;city[2]&gt; Interval: 1972-04-01--2023-04-07</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;city[2]&gt; Interval: 1972-04-01--2023-04-09</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] 01100 13101</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Cities:</span>
@@ -83,7 +83,7 @@
 <span class="r-out co"><span class="r-pr">#&gt;</span> 2       ちよだく</span>
 <span class="r-in"><span><span class="fu">city_desig_merge</span><span class="op">(</span><span class="va">city</span>,</span></span>
 <span class="r-in"><span>                 merge_tokyo <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;city[2]&gt; Interval: 1972-04-01--2023-04-07</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;city[2]&gt; Interval: 1972-04-01--2023-04-09</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] 01100 13100</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Cities:</span>
