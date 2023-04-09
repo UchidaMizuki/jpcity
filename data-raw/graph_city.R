@@ -69,9 +69,12 @@ edges_city <- bind_rows(areacode_start |>
                           left_join(nodes_city |>
                                       rename(from = node),
                                     by = col_names_city) |>
-                          add_column(date = int_end(interval_city),
+                          add_column(date = int_end(interval_city) + days(1L),
                                      to = 1L)) |>
-  select(date, type, from, to)
+  select(date, type, from, to) |>
+
+  # Because links between the same node create bugs in ancestor/ancestor calculations
+  filter(from != to)
 
 graph_city <- tbl_graph(nodes = nodes_city |>
                           select(!node),
@@ -106,7 +109,7 @@ graph_city <- graph_city |>
             by = join_by(node == to)) |>
   left_join(date_end,
             by = join_by(node == from)) |>
-  dplyr::select(!node) |>
+  select(!node) |>
   mutate(interval = if_else(is.na(city_code),
                             interval(NA_Date_, NA_Date_,
                                      tzone = tz_jst),

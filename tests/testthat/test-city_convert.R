@@ -44,4 +44,19 @@ test_that("city_convert-02", {
 
   out <- city_convert(city, from, "1971-10-31")[[1L]]
   expect_true(setequal(city_code(out), c("04201", "04382", "04403", "04405")))
+
+  # Kushiro city
+  city <- parse_city("01206")
+
+  out <- city_convert(city, "2020-10-01", "2020-10-01")
+  expect_length(out, 1L)
+  expect_equal(city_code(out[[1L]]), "01206")
+
+  out <- city_convert(city, "2020-10-01", "2005-10-11")
+  expect_length(out, 1L)
+  expect_equal(city_code(out[[1L]]), "01206")
+
+  out <- city_convert(city, "2020-10-01", lubridate::int_end(interval_city) - lubridate::days(1L))
+  expect_length(out, 1L)
+  expect_equal(city_code(out[[1L]]), "01206")
 })
