@@ -68,4 +68,16 @@ test_that("city_convert-02", {
   out <- city_convert(city, "2005-02-28", "2005-03-01")
   expect_length(out[[1L]], 1L)
   expect_length(out[[2L]], 1L)
+
+  # Uruma City
+  city <- parse_city("47213",
+                     when = "2020-01-01")
+  cities <- city_convert(city, "2020-01-01", "1994-01-01")[[1L]]
+  expect_true(setequal(city_code(cities), c("47202", "47203", "47322", "47323")))
+
+  cities <- city_convert(city, "2020-01-01", "1972-05-15")[[1L]]
+  expect_true(setequal(city_code(cities), c("47202", "47203", "47322", "47323")))
+
+  cities <- city_convert(city, "2020-01-01", "1972-05-14")[[1L]]
+  expect_length(cities, 0L)
 })
