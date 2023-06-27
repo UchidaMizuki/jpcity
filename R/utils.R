@@ -62,3 +62,8 @@ extract_pref_name <- function(string) {
   string |>
     stringr::str_extract("[^[\\u90fd\\u9053\\u5e9c\\u770c]$]+")
 }
+
+quiet_as_integer <- function(x) {
+  purrr::quietly(as.integer)(x) |>
+    purrr::chuck("result")
+}
