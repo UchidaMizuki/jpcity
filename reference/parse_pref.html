@@ -10,7 +10,7 @@
     
     <a class="navbar-brand me-2" href="../index.html">jpcity</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.1</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.1.9000</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -45,13 +45,22 @@
 
     <div class="section level2">
     <h2 id="ref-usage">Usage<a class="anchor" aria-label="anchor" href="#ref-usage"></a></h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">parse_pref</span><span class="op">(</span><span class="va">pref_name</span><span class="op">)</span></span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">parse_pref</span><span class="op">(</span><span class="va">x</span>, strict <span class="op">=</span> <span class="cn">TRUE</span>, pref_name <span class="op">=</span> <span class="fu">deprecated</span><span class="op">(</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div class="section level2">
     <h2 id="arguments">Arguments<a class="anchor" aria-label="anchor" href="#arguments"></a></h2>
-    <dl><dt>pref_name</dt>
+    <dl><dt>x</dt>
 <dd><p>A <code>character</code> vector of prefecture codes or names.</p></dd>
+
+
+<dt>strict</dt>
+<dd><p>A scalar logical. Whether to require the code to have 1 or 2
+digits. By default, <code>TRUE</code>.</p></dd>
+
+
+<dt>pref_name</dt>
+<dd><p>(Depricated) A <code>character</code> vector of prefecture codes or names.</p></dd>
 
 </dl></div>
     <div class="section level2">
