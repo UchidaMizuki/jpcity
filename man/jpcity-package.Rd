@@ -14,6 +14,8 @@ Read Japanese city codes (\url{https://www.e-stat.go.jp/municipalities/cities}) 
 Useful links:
 \itemize{
   \item \url{https://uchidamizuki.github.io/jpcity/}
+  \item \url{https://github.com/UchidaMizuki/jpcity}
+  \item Report bugs at \url{https://github.com/UchidaMizuki/jpcity/issues}
 }
 
 }
