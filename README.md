@@ -4,6 +4,10 @@
 # jpcity <a href="https://uchidamizuki.github.io/jpcity/"><img src="man/figures/logo.png" align="right" height="139" /></a>
 
 <!-- badges: start -->
+
+[![R-CMD-check](https://github.com/UchidaMizuki/jpcity/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/UchidaMizuki/jpcity/actions/workflows/R-CMD-check.yaml)
+[![CRAN
+status](https://www.r-pkg.org/badges/version/jpcity)](https://CRAN.R-project.org/package=jpcity)
 <!-- badges: end -->
 
 README in Japanese is
@@ -36,6 +40,7 @@ devtools::install_github("UchidaMizuki/jpcity")
 
 ``` r
 library(jpcity)
+#> Warning: パッケージ 'jpcity' はバージョン 4.3.1 の R の下で造られました
 library(tidyverse)
 ```
 
@@ -154,7 +159,7 @@ tibble(city = get_city("2020-01-01"))
 #>  8 01108 [北海道札幌市厚別区]
 #>  9 01109 [北海道札幌市手稲区]
 #> 10 01110 [北海道札幌市清田区]
-#> # … with 1,892 more rows
+#> # ℹ 1,892 more rows
 
 tibble(city = get_city("1970-04-01"))
 #> # A tibble: 3,369 × 1
@@ -170,14 +175,14 @@ tibble(city = get_city("1970-04-01"))
 #>  8 01208 [北海道北見市]  
 #>  9 01209 [北海道夕張市]  
 #> 10 01210 [北海道岩見沢市]
-#> # … with 3,359 more rows
+#> # ℹ 3,359 more rows
 ```
 
 ### Find city codes using the name of the prefecture or city
 
 ``` r
 find_city(c("東京都", "新宿区"))
-#> <city[1]> Interval: 1970-04-01--2023-03-04
+#> <city[1]> Interval: 1970-04-01--2023-04-25
 #> [1] 13104
 #> 
 #> Cities:
