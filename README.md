@@ -8,6 +8,8 @@
 [![R-CMD-check](https://github.com/UchidaMizuki/jpcity/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/UchidaMizuki/jpcity/actions/workflows/R-CMD-check.yaml)
 [![CRAN
 status](https://www.r-pkg.org/badges/version/jpcity)](https://CRAN.R-project.org/package=jpcity)
+[![Codecov test
+coverage](https://codecov.io/gh/UchidaMizuki/jpcity/branch/main/graph/badge.svg)](https://app.codecov.io/gh/UchidaMizuki/jpcity?branch=main)
 <!-- badges: end -->
 
 README in Japanese is
