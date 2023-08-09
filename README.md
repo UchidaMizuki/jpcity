@@ -42,7 +42,6 @@ devtools::install_github("UchidaMizuki/jpcity")
 
 ``` r
 library(jpcity)
-#> Warning: パッケージ 'jpcity' はバージョン 4.3.1 の R の下で造られました
 library(tidyverse)
 ```
 

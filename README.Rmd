@@ -44,7 +44,7 @@ devtools::install_github("UchidaMizuki/jpcity")
 
 ## Examples
 
-```{r setup, message=FALSE}
+```{r setup, message=FALSE, warning=FALSE}
 library(jpcity)
 library(tidyverse)
 ```

@@ -16,6 +16,9 @@ knitr::opts_chunk$set(
 # jpcity <a href="https://uchidamizuki.github.io/jpcity/"><img src="man/figures/logo.png" align="right" height="139" /></a>
 
 <!-- badges: start -->
+[![R-CMD-check](https://github.com/UchidaMizuki/jpcity/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/UchidaMizuki/jpcity/actions/workflows/R-CMD-check.yaml)
+[![CRAN status](https://www.r-pkg.org/badges/version/jpcity)](https://CRAN.R-project.org/package=jpcity)
+[![Codecov test coverage](https://codecov.io/gh/UchidaMizuki/jpcity/branch/main/graph/badge.svg)](https://app.codecov.io/gh/UchidaMizuki/jpcity?branch=main)
 <!-- badges: end -->
 
 jpcityは，日本の市区町村コードの読み取り・変換を行うためのRパッケージです．
