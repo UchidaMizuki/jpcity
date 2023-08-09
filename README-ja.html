@@ -47,7 +47,7 @@
 <div id="jpcity-" class="section level1">
 
 <!-- badges: start -->
-<!-- badges: end -->
+<p><a href="https://github.com/UchidaMizuki/jpcity/actions/workflows/R-CMD-check.yaml" class="external-link"><img src="https://github.com/UchidaMizuki/jpcity/actions/workflows/R-CMD-check.yaml/badge.svg" alt="R-CMD-check"></a> <a href="https://CRAN.R-project.org/package=jpcity" class="external-link"><img src="https://www.r-pkg.org/badges/version/jpcity" alt="CRAN status"></a> <a href="https://app.codecov.io/gh/UchidaMizuki/jpcity?branch=main" class="external-link"><img src="https://codecov.io/gh/UchidaMizuki/jpcity/branch/main/graph/badge.svg" alt="Codecov test coverage"></a> <!-- badges: end --></p>
 <p>jpcityは，日本の市区町村コードの読み取り・変換を行うためのRパッケージです． このパッケージは，以下のような機能を提供しています．</p>
 <ul><li>市区町村コードの読み取り：<code><a href="reference/parse_city.html">parse_city()</a></code>
 <ul><li>
@@ -72,6 +72,7 @@
 <h2 id="examples">Examples<a class="anchor" aria-label="anchor" href="#examples"></a></h2>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://uchidamizuki.github.io/jpcity/">jpcity</a></span><span class="op">)</span></span>
+<span><span class="co">#&gt; Warning: package 'jpcity' was built under R version 4.3.1</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://tidyverse.tidyverse.org" class="external-link">tidyverse</a></span><span class="op">)</span></span></code></pre></div>
 <div class="section level3">
 <h3 id="市区町村コードの読み取り">市区町村コードの読み取り<a class="anchor" aria-label="anchor" href="#%E5%B8%82%E5%8C%BA%E7%94%BA%E6%9D%91%E3%82%B3%E3%83%BC%E3%83%89%E3%81%AE%E8%AA%AD%E3%81%BF%E5%8F%96%E3%82%8A"></a></h3>
@@ -185,7 +186,7 @@
 <span><span class="co">#&gt;  8 01108 [北海道札幌市厚別区]</span></span>
 <span><span class="co">#&gt;  9 01109 [北海道札幌市手稲区]</span></span>
 <span><span class="co">#&gt; 10 01110 [北海道札幌市清田区]</span></span>
-<span><span class="co">#&gt; # … with 1,892 more rows</span></span>
+<span><span class="co">#&gt; # ℹ 1,892 more rows</span></span>
 <span></span>
 <span><span class="fu">tibble</span><span class="op">(</span>city <span class="op">=</span> <span class="fu"><a href="reference/get_city.html">get_city</a></span><span class="op">(</span><span class="st">"1970-04-01"</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="co">#&gt; # A tibble: 3,369 × 1</span></span>
@@ -201,13 +202,13 @@
 <span><span class="co">#&gt;  8 01208 [北海道北見市]  </span></span>
 <span><span class="co">#&gt;  9 01209 [北海道夕張市]  </span></span>
 <span><span class="co">#&gt; 10 01210 [北海道岩見沢市]</span></span>
-<span><span class="co">#&gt; # … with 3,359 more rows</span></span></code></pre></div>
+<span><span class="co">#&gt; # ℹ 3,359 more rows</span></span></code></pre></div>
 </div>
 <div class="section level3">
 <h3 id="都道府県市区町村名を用いた市区町村コードの検索">都道府県・市区町村名を用いた市区町村コードの検索<a class="anchor" aria-label="anchor" href="#%E9%83%BD%E9%81%93%E5%BA%9C%E7%9C%8C%E5%B8%82%E5%8C%BA%E7%94%BA%E6%9D%91%E5%90%8D%E3%82%92%E7%94%A8%E3%81%84%E3%81%9F%E5%B8%82%E5%8C%BA%E7%94%BA%E6%9D%91%E3%82%B3%E3%83%BC%E3%83%89%E3%81%AE%E6%A4%9C%E7%B4%A2"></a></h3>
 <div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="reference/find_city.html">find_city</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"東京都"</span>, <span class="st">"新宿区"</span><span class="op">)</span><span class="op">)</span></span>
-<span><span class="co">#&gt; &lt;city[1]&gt; Interval: 1970-04-01--2023-03-04</span></span>
+<span><span class="co">#&gt; &lt;city[1]&gt; Interval: 1970-04-01--2023-04-25</span></span>
 <span><span class="co">#&gt; [1] 13104</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; Cities:</span></span>
