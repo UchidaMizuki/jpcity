@@ -24,8 +24,8 @@ parse_pref <- function(x,
                                 !strict & stringr::str_detect(x, "^\\d+$") ~ x |>
                                   stringr::str_sub(1, 2) |>
                                   quiet_as_integer(),
-                                TRUE ~ vec_slice(string_pref_name$pref_code,
-                                                 vec_match(extract_pref_name(x), string_pref_name$string_pref_name)))
+                                .default = vec_slice(string_pref_name$pref_code,
+                                                     vec_match(extract_pref_name(x), string_pref_name$string_pref_name)))
   data <- vec_slice(string_pref_name,
                     vec_match(pref_code, string_pref_name$pref_code))
   pref(data)
