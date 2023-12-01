@@ -106,3 +106,15 @@ city_interval <- function(city,
       dplyr::pull("interval")
   }
 }
+
+#' Convert city to prefecture
+#'
+#' @param city A `jpcity_city` object.
+#'
+#' @return A `jpcity_pref` object.
+#'
+#' @export
+city_to_pref <- function(city) {
+  assert_city(city)
+  parse_pref(pref_code(city))
+}
