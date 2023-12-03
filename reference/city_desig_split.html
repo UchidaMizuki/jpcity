@@ -74,11 +74,11 @@
     <div class="section level2">
     <h2 id="ref-examples">Examples<a class="anchor" aria-label="anchor" href="#ref-examples"></a></h2>
     <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="va">city</span> <span class="op">&lt;-</span> <span class="fu"><a href="parse_city.html">parse_city</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"01100"</span>, <span class="st">"13100"</span><span class="op">)</span><span class="op">)</span></span></span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Guessing the interval to be <span style="color: #0000BB;">1972-04-01 JST--2023-04-25 JST</span>.</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> Guessing the interval to be <span style="color: #0000BB;">1972-04-01 JST--Inf</span>.</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BBBB;">ℹ</span> You can override using `when` argument.</span>
 <span class="r-in"><span><span class="fu">city_desig_split</span><span class="op">(</span><span class="va">city</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [[1]]</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;city[7]&gt; Interval: 1972-04-01--2023-04-25</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;city[7]&gt; Interval: 1972-04-01--Inf</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] 01101 01102 01103 01104 01105 01106 01107</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Cities:</span>
@@ -100,7 +100,7 @@
 <span class="r-out co"><span class="r-pr">#&gt;</span> 7         にしく</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [[2]]</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;city[23]&gt; Interval: 1970-04-01--2023-04-25</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;city[23]&gt; Interval: 1970-04-01--Inf</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>  [1] 13101 13102 13103 13104 13105 13106 13107 13108 13109 13110 13111 13112</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [13] 13113 13114 13115 13116 13117 13118 13119 13120 13121 13122 13123</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
@@ -157,7 +157,7 @@
 <span class="r-in"><span><span class="fu">city_desig_split</span><span class="op">(</span><span class="va">city</span>,</span></span>
 <span class="r-in"><span>                 split_tokyo <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [[1]]</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;city[7]&gt; Interval: 1972-04-01--2023-04-25</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;city[7]&gt; Interval: 1972-04-01--Inf</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] 01101 01102 01103 01104 01105 01106 01107</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Cities:</span>
@@ -179,7 +179,7 @@
 <span class="r-out co"><span class="r-pr">#&gt;</span> 7         にしく</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [[2]]</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;city[1]&gt; Interval: 1970-04-01--2023-04-25</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;city[1]&gt; Interval: 1970-04-01--Inf</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] 13100</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Cities:</span>

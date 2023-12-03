@@ -215,23 +215,23 @@
 </h3>
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu">tibble</span><span class="op">(</span>city <span class="op">=</span> <span class="fu"><a href="reference/get_city.html">get_city</a></span><span class="op">(</span><span class="st">"2020-01-01"</span><span class="op">)</span><span class="op">)</span></span>
-<span><span class="co">#&gt; # A tibble: 1,902 × 1</span></span>
+<span><span class="co">#&gt; # A tibble: 1,923 × 1</span></span>
 <span><span class="co">#&gt;    city                      </span></span>
 <span><span class="co">#&gt;    &lt;city&gt;                    </span></span>
-<span><span class="co">#&gt;  1 01101 [北海道札幌市中央区]</span></span>
-<span><span class="co">#&gt;  2 01102 [北海道札幌市北区]  </span></span>
-<span><span class="co">#&gt;  3 01103 [北海道札幌市東区]  </span></span>
-<span><span class="co">#&gt;  4 01104 [北海道札幌市白石区]</span></span>
-<span><span class="co">#&gt;  5 01105 [北海道札幌市豊平区]</span></span>
-<span><span class="co">#&gt;  6 01106 [北海道札幌市南区]  </span></span>
-<span><span class="co">#&gt;  7 01107 [北海道札幌市西区]  </span></span>
-<span><span class="co">#&gt;  8 01108 [北海道札幌市厚別区]</span></span>
-<span><span class="co">#&gt;  9 01109 [北海道札幌市手稲区]</span></span>
-<span><span class="co">#&gt; 10 01110 [北海道札幌市清田区]</span></span>
-<span><span class="co">#&gt; # ℹ 1,892 more rows</span></span>
+<span><span class="co">#&gt;  1 01100 [北海道札幌市]      </span></span>
+<span><span class="co">#&gt;  2 01101 [北海道札幌市中央区]</span></span>
+<span><span class="co">#&gt;  3 01102 [北海道札幌市北区]  </span></span>
+<span><span class="co">#&gt;  4 01103 [北海道札幌市東区]  </span></span>
+<span><span class="co">#&gt;  5 01104 [北海道札幌市白石区]</span></span>
+<span><span class="co">#&gt;  6 01105 [北海道札幌市豊平区]</span></span>
+<span><span class="co">#&gt;  7 01106 [北海道札幌市南区]  </span></span>
+<span><span class="co">#&gt;  8 01107 [北海道札幌市西区]  </span></span>
+<span><span class="co">#&gt;  9 01108 [北海道札幌市厚別区]</span></span>
+<span><span class="co">#&gt; 10 01109 [北海道札幌市手稲区]</span></span>
+<span><span class="co">#&gt; # ℹ 1,913 more rows</span></span>
 <span></span>
 <span><span class="fu">tibble</span><span class="op">(</span>city <span class="op">=</span> <span class="fu"><a href="reference/get_city.html">get_city</a></span><span class="op">(</span><span class="st">"1970-04-01"</span><span class="op">)</span><span class="op">)</span></span>
-<span><span class="co">#&gt; # A tibble: 3,369 × 1</span></span>
+<span><span class="co">#&gt; # A tibble: 3,376 × 1</span></span>
 <span><span class="co">#&gt;    city                  </span></span>
 <span><span class="co">#&gt;    &lt;city&gt;                </span></span>
 <span><span class="co">#&gt;  1 01201 [北海道札幌市]  </span></span>
@@ -244,14 +244,14 @@
 <span><span class="co">#&gt;  8 01208 [北海道北見市]  </span></span>
 <span><span class="co">#&gt;  9 01209 [北海道夕張市]  </span></span>
 <span><span class="co">#&gt; 10 01210 [北海道岩見沢市]</span></span>
-<span><span class="co">#&gt; # ℹ 3,359 more rows</span></span></code></pre></div>
+<span><span class="co">#&gt; # ℹ 3,366 more rows</span></span></code></pre></div>
 </div>
 <div class="section level3">
 <h3 id="find-city-codes-using-the-name-of-the-prefecture-or-city">Find city codes using the name of the prefecture or city<a class="anchor" aria-label="anchor" href="#find-city-codes-using-the-name-of-the-prefecture-or-city"></a>
 </h3>
 <div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="reference/find_city.html">find_city</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"東京都"</span>, <span class="st">"新宿区"</span><span class="op">)</span><span class="op">)</span></span>
-<span><span class="co">#&gt; &lt;city[1]&gt; Interval: 1970-04-01--2023-04-25</span></span>
+<span><span class="co">#&gt; &lt;city[1]&gt; Interval: 1970-04-01--Inf</span></span>
 <span><span class="co">#&gt; [1] 13104</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; Cities:</span></span>
