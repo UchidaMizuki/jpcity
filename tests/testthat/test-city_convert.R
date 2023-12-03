@@ -58,7 +58,7 @@ test_that("city_convert-02", {
   expect_length(out[[1L]], 1L)
   expect_equal(city_code(out[[1L]]), "01206")
 
-  out <- city_convert(city, "2020-10-01", lubridate::int_end(interval_city) - lubridate::days(1L))
+  out <- city_convert(city, "2020-10-01", lubridate::int_end(graph_city$interval_city) - lubridate::days(1L))
   out <- out[[1L]]
   expect_length(out[[1L]], 1L)
   expect_equal(city_code(out[[1L]]), "01206")

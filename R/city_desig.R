@@ -31,8 +31,9 @@ city_desig_merge <- function(city,
                     dplyr::coalesce(.data$interval),
                   .keep = "unused")
 
-  parse_city(city_code = data$city_code,
-             when = intersect_interval(data$interval))
+  parse_city(data$city_code,
+             when = intersect_interval(data$interval,
+                                       when = TRUE))
 }
 
 #' Split designated cities into wards
@@ -62,9 +63,10 @@ city_desig_split <- function(city,
   city_desig_code <- vec_split(city_desig_code,
                                city_desig_code$city_desig_code) |>
     dplyr::mutate(val = .data$val |>
-                    purrr::modify(\(val) {
-                      parse_city(city_code = val$city_code,
-                                 when = intersect_interval(val$interval))
+                    purrr::map(\(val) {
+                      parse_city(val$city_code,
+                                 when = intersect_interval(val$interval,
+                                                           when = TRUE))
                     }))
   data_frame(key = city_code,
              val = vec_chop(city)) |>

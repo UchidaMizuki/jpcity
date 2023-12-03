@@ -28,11 +28,11 @@ city_convert <- function(city, from, to) {
     add_city_data()
 
   if (from < to) {
-    relatives <- descendants_city |>
+    relatives <- graph_city$descendants_city |>
       dplyr::filter(.data$node == .data$node_relatives | from <= lubridate::int_start(.data$interval),
                     to %within% .data$interval)
   } else {
-    relatives <- ancestors_city |>
+    relatives <- graph_city$ancestors_city |>
       dplyr::filter(.data$node == .data$node_relatives | from >= lubridate::int_end(.data$interval),
                     to %within% .data$interval)
   }
@@ -40,12 +40,12 @@ city_convert <- function(city, from, to) {
   relatives <- relatives |>
     dplyr::select(!"interval") |>
     dplyr::filter(.data$node %in% data$node) |>
-    dplyr::left_join(nodes_city,
+    dplyr::left_join(graph_city$nodes_city,
                      by = dplyr::join_by("node_relatives" == "node")) |>
     dplyr::select(!"node_relatives")
   relatives <- vec_split(relatives, relatives$node) |>
     dplyr::mutate(val = .data$val |>
-                    purrr::modify(\(val) {
+                    purrr::map(\(val) {
                       city(val,
                            interval = intersect_interval(val$interval))
                     }))

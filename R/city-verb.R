@@ -99,7 +99,7 @@ city_interval <- function(city,
     attr(city, "interval")
   } else {
     city_data(city) |>
-      dplyr::left_join(nodes_city,
+      dplyr::left_join(graph_city$nodes_city,
                        by = dplyr::join_by("city_code", "pref_name",
                                            "city_desig_name", "city_desig_name_kana",
                                            "city_name", "city_name_kana")) |>

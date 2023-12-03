@@ -42,8 +42,8 @@ check_city_interval <- function(city_code, interval,
 
 add_city_data <- function(data) {
   data <- as.data.frame(data)
-  vec_slice(nodes_city,
-            vec_match(data, nodes_city[names2(data)]))
+  vec_slice(graph_city$nodes_city,
+            vec_match(data, graph_city$nodes_city[names2(data)]))
 }
 
 #' Test if the object is a jpcity_city object
@@ -71,7 +71,7 @@ vec_restore.jpcity_city <- function(x, to, ...) {
 #' @export
 c.jpcity_city <- function(...) {
   out <- list2(...) |>
-    purrr::modify(city_data) |>
+    purrr::map(city_data) |>
     purrr::list_c() |>
     add_city_data()
   city(out,
@@ -90,7 +90,7 @@ c.jpcity_city <- function(...) {
 #' @export
 find_city <- function(patterns,
                       when = NULL) {
-  out <- nodes_city |>
+  out <- graph_city$nodes_city |>
     dplyr::mutate(string_city = stringr::str_glue("{pref_name}{city_desig_name}{city_name}{city_desig_name_kana}{city_name_kana}",
                                                   .na = ""))
   for (pattern in patterns) {
@@ -123,8 +123,8 @@ find_city <- function(patterns,
 get_city <- function(when) {
   when <- parse_ymd(when)
 
-  out <- nodes_city |>
-    dplyr::filter(!.data$city_code %in% city_desig_code$city_desig_code,
+  out <- graph_city$nodes_city |>
+    dplyr::filter(!.data$city_code %in% city_desig_code,
                   when %within% .data$interval) |>
     dplyr::arrange(.data$city_code)
   city(out,

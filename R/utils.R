@@ -23,9 +23,10 @@ assert_city_or_pref <- function(city) {
   }
 }
 
-intersect_interval <- function(interval) {
+intersect_interval <- function(interval,
+                               when = FALSE) {
   size_interval <- vec_size(interval)
-  if (size_interval == 0L) {
+  out <- if (size_interval == 0L) {
     vec_init(interval)
   } else if (size_interval == 1L) {
     interval
@@ -37,12 +38,16 @@ intersect_interval <- function(interval) {
     end <- min(lubridate::int_end(interval),
                na.rm = TRUE)
 
-    if (is.finite(start) && is.finite(end) && start <= end) {
+    if (is.finite(start) && start <= end) {
       start %--% end
     } else {
       lubridate::NA_Date_ %--% lubridate::NA_Date_
     }
   }
+  if (when && is.infinite(lubridate::int_end(out))) {
+    lubridate::int_end(out) <- lubridate::int_end(graph_city$interval_city)
+  }
+  out
 }
 
 parse_ymd <- function(when) {
@@ -52,8 +57,8 @@ parse_ymd <- function(when) {
     when <- lubridate::ymd(when,
                            tz = tz_jst)
   }
-  if (!when %within% interval_city) {
-    cli::cli_abort("{.arg when} must be within {.val {interval_city}}")
+  if (!when %within% graph_city$interval_city) {
+    cli::cli_abort("{.arg when} must be within {.val {graph_city$interval_city}}")
   }
   when
 }
