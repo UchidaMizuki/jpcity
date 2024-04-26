@@ -1,8 +1,8 @@
-pandoc: 2.19.2
-pkgdown: 2.0.7
+pandoc: 3.1.11
+pkgdown: 2.0.9
 pkgdown_sha: ~
 articles: {}
-last_built: 2023-12-03T07:18Z
+last_built: 2024-04-26T16:55Z
 urls:
   reference: https://uchidamizuki.github.io/jpcity/reference
   article: https://uchidamizuki.github.io/jpcity/articles
