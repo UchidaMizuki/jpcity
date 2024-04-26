@@ -36,8 +36,6 @@ devtools::install_github("UchidaMizuki/jpcity")
 ``` r
 library(jpcity)
 library(tidyverse)
-#> Warning: パッケージ 'dplyr' はバージョン 4.3.2 の R の下で造られました
-#> Warning: パッケージ 'stringr' はバージョン 4.3.2 の R の下で造られました
 ```
 
 ### 市区町村コードの読み取り
