@@ -48,7 +48,7 @@ read_absorption_separation <- function(file) {
            city_name_kana = city_name_kana |>
              coalesce(city_desig_name_kana),
            event = event |>
-             str_split("\\n|(?<=編入)し、")) |>
+             str_split("\\n|　|(?<=編入)し、")) |>
     unnest(event)  |>
     mutate(event = event |>
              str_remove_all("\\s") |>
@@ -75,8 +75,13 @@ read_absorption_separation <- function(file) {
               .by = c(date, city_name, event)) |>
     relocate(city_code) |>
     mutate(pattern_city = str_glue("(\\((({city_name_kana})、)?({city_code})\\))"),
-           pattern_city = case_when(city_name == "上九一色村" ~ str_glue("{city_name}{pattern_city}大字梯及び古関|大字精進、本栖及び富士ヶ嶺"),
-                                    TRUE ~ str_glue("({pref_name})?({city_desig_name})?{city_name}{pattern_city}?")),
+           pattern_city = case_when(city_name == "上九一色村" ~
+                                      str_glue("{city_name}{pattern_city}(大字梯及び古関|大字精進、本栖及び富士ヶ嶺)"),
+
+                                    # 2024-01-01: Kita-ku, Hamamatsu City
+                                    city_desig_name == "浜松市" & city_name == "北区" ~
+                                      str_glue("{city_name}{pattern_city}(\\((三方原地区/初生町、三方原町、東三方町、豊岡町、三幸町、大原町、根洗町|三方原地区以外)\\))?"),
+                                    .default = str_glue("({pref_name})?({city_desig_name})?{city_name}{pattern_city}?")),
            pattern_city = str_glue("^{pattern_city}$")) |>
     nest(.by = c(date, event),
          .key = "city") |>
@@ -100,6 +105,7 @@ read_absorption_separation <- function(file) {
     "新設合併", pattern_cities, "が(合併|統合)し、", pattern_city, "を新設",
     "政令指定都市施行", pattern_city, "の", pattern_city, "への政令指定都市[施移]行",
     "区の新設|郡の新設", "", "", pattern_cities, "の新設",
+    "区の再編", pattern_cities, "を", pattern_city, "に再編(\\(区名、区域の変更なし\\))?",
     "分割", pattern_city, "を分割し、", pattern_cities, "を新設",
     "分離", pattern_cities, "から分離し、", pattern_cities, "を新設",
     "名称変更", pattern_city, str_glue("が(.{zero_or_more}に[市町]制施行し、)?"), pattern_city, "に名称変更",
@@ -159,11 +165,12 @@ read_absorption_separation <- function(file) {
   }
 
   absorption_separation |>
-    filter(!str_detect(event, "(特例市に|中核市に)移行$")) |>
+    filter(!str_detect(event, "(特例市に|中核市に)移行$|の区の再編")) |>
     mutate(type = case_when(str_detect(event, str_glue(pattern_type[["編入合併"]])) ~ "編入合併",
                             str_detect(event, str_glue(pattern_type[["新設合併"]])) ~ "新設合併",
                             str_detect(event, str_glue(pattern_type[["政令指定都市施行"]])) ~ "政令指定都市施行",
                             str_detect(event, str_glue(pattern_type[["区の新設|郡の新設"]])) ~ "区の新設|郡の新設",
+                            str_detect(event, str_glue(pattern_type[["区の再編"]])) ~ "区の再編",
                             str_detect(event, str_glue(pattern_type[["分割"]])) ~ "分割",
                             str_detect(event, str_glue(pattern_type[["分離"]])) ~ "分離",
                             str_detect(event, str_glue(pattern_type[["名称変更"]])) ~ "名称変更",
@@ -195,6 +202,7 @@ read_absorption_separation <- function(file) {
            city_to = event |>
              str_extract(pattern_city_to) |>
              str_extract_all(pattern_city),
+           event,
            .keep = "unused") |>
     unnest(city_from,
            keep_empty = TRUE) |>
