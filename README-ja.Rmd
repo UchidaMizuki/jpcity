@@ -33,6 +33,10 @@ jpcityは，日本の市区町村コードの読み取り・変換を行うた�
 
 ## Installation
 
+``` r
+install.packages("jpcity")
+```
+
 jpcityの開発版は，[GitHub](https://github.com/)からインストールすることができます．
 
 ``` r

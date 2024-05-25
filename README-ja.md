@@ -24,6 +24,10 @@ jpcityは，日本の市区町村コードの読み取り・変換を行うた�
 
 ## Installation
 
+``` r
+install.packages("jpcity")
+```
+
 jpcityの開発版は，[GitHub](https://github.com/)からインストールすることができます．
 
 ``` r
@@ -44,6 +48,9 @@ library(tidyverse)
 city <- parse_city(c("13101", "27101", "23101"))
 #> Guessing the interval to be 1970-04-01 JST--1989-02-12 JST.
 #> ℹ You can override using `when` argument.
+```
+
+``` r
 
 # Override the interval using `when` argument
 city <- parse_city(c("13101", "27101", "23101"),
@@ -61,6 +68,9 @@ city
 #> 1       ちよだく
 #> 2         きたく
 #> 3       ちくさく
+```
+
+``` r
 
 tibble(city = city,
        pref_name = pref_name(city),
@@ -91,6 +101,9 @@ tibble(city_from = city,
 #> 1 13101 [東京都千代田区]       13101 [東京都千代田区]      
 #> 2 27101 [大阪府大阪市北区]     27127 [大阪府大阪市北区]    
 #> 3 23101 [愛知県名古屋市千種区] 23101 [愛知県名古屋市千種区]
+```
+
+``` r
 
 city <- parse_city("15100",
                    when = "2020-01-01")
@@ -154,6 +167,9 @@ tibble(city = get_city("2020-01-01"))
 #>  9 01108 [北海道札幌市厚別区]
 #> 10 01109 [北海道札幌市手稲区]
 #> # ℹ 1,913 more rows
+```
+
+``` r
 
 tibble(city = get_city("1970-04-01"))
 #> # A tibble: 3,376 × 1

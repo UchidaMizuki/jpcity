@@ -35,6 +35,10 @@ This package provides the following features,
 
 ## Installation
 
+``` r
+install.packages("jpcity")
+```
+
 You can install the development version of jpcity from [GitHub](https://github.com/) with:
 
 ``` r
