@@ -4,15 +4,13 @@
 \alias{parse_pref}
 \title{Parse prefecture codes or names}
 \usage{
-parse_pref(x, strict = TRUE, pref_name = deprecated())
+parse_pref(x, strict = TRUE)
 }
 \arguments{
 \item{x}{A \code{character} vector of prefecture codes or names.}
 
 \item{strict}{A scalar logical. Whether to require the code to have 1 or 2
 digits. By default, \code{TRUE}.}
-
-\item{pref_name}{(Depricated) A \code{character} vector of prefecture codes or names.}
 }
 \value{
 A \code{jpcity_pref} object.

@@ -1,3 +1,9 @@
+# jpcity 0.2.0
+
+* Add `city_to_pref()`, `city_data()` and `pref_data()`.
+* Delete deprecated function `as_pref()` and deprecated arguments.
+* Support for Hamamatsu City ward reorganization (2024-01-01).
+
 # jpcity 0.1.1
 
 * Fix bugs of raw data and add tests.

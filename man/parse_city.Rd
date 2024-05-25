@@ -4,7 +4,7 @@
 \alias{parse_city}
 \title{Parse city codes}
 \usage{
-parse_city(x, when = NULL, na = c("", "NA"), city_code = deprecated())
+parse_city(x, when = NULL, na = c("", "NA"))
 }
 \arguments{
 \item{x}{A \code{character} vector of city codes.}
@@ -13,8 +13,6 @@ parse_city(x, when = NULL, na = c("", "NA"), city_code = deprecated())
 object.}
 
 \item{na}{A \code{character} vector to be treated as missing values.}
-
-\item{city_code}{(Deprecated) A \code{character} vector of city codes.}
 }
 \value{
 A \code{jpcity_city} object.

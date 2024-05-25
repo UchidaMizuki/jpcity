@@ -4,20 +4,13 @@
 #' @param when A `character` (year, month, and day components) or date-time
 #' object.
 #' @param na A `character` vector to be treated as missing values.
-#' @param city_code (Deprecated) A `character` vector of city codes.
 #'
 #' @return A `jpcity_city` object.
 #'
 #' @export
 parse_city <- function(x,
                        when = NULL,
-                       na = c("", "NA"),
-                       city_code = deprecated()) {
-  if (lifecycle::is_present(city_code)) {
-    lifecycle::deprecate_warn("0.2.0", "parse_city(city_code = )", "parse_city(x = )")
-    x <- city_code
-  }
-
+                       na = c("", "NA")) {
   city_code <- check_city_code(x,
                                na = na)
 
