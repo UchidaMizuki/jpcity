@@ -181,7 +181,8 @@ get_graph_city <- function(interval_city, areacode_start, areacode_end, absorpti
   nodes_city <- nodes_city |>
     select(!c(ancestors, descendants))
 
-  list(interval_city = interval_city,
+  list(graph_city = graph_city,
+       interval_city = interval_city,
        nodes_city = nodes_city,
        ancestors_city = ancestors_city,
        descendants_city = descendants_city,
