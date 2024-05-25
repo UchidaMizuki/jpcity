@@ -4,6 +4,13 @@ city <- function(data, interval) {
            class = "jpcity_city")
 }
 
+#' Get city data
+#'
+#' @param city A `jpcity_city` object.
+#'
+#' @return A data frame.
+#'
+#' @export
 city_data <- function(city) {
   data_frame(city_code = field(city, "city_code"),
              pref_name = field(city, "pref_name"),

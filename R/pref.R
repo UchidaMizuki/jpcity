@@ -3,6 +3,13 @@ pref <- function(data) {
            class = "jpcity_pref")
 }
 
+#' Get pref data
+#'
+#' @param pref A `jpcity_pref` object.
+#'
+#' @return A data frame.
+#'
+#' @export
 pref_data <- function(pref) {
   data_frame(pref_code = field(pref, "pref_code"),
              pref_name = field(pref, "pref_name"))
