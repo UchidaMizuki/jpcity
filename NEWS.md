@@ -1,3 +1,8 @@
+# jpcity 0.2.1
+
+* Fix bug for raw data of Kamikuishiki Village that occurred in version 0.2.0.
+* Add tests for Kamikuishiki Village and Hamamatsu City.
+
 # jpcity 0.2.0
 
 * Add `city_to_pref()`, `city_data()` and `pref_data()`.
