@@ -80,4 +80,23 @@ test_that("city_convert-02", {
 
   cities <- city_convert(city, "2020-01-01", "1972-05-14")[[1L]]
   expect_length(cities, 0L)
+
+  # Kamikuishiki Village
+  city <- parse_city("19341",
+                     when = "2000-01-01")
+  cities <- city_convert(city, "2000-01-01", "2006-03-01")
+  expect_equal(city_code(cities[[1]]), c("19201", "19430"))
+
+  # Hamamatsu City
+  city <- parse_city(c("22131", "22132", "22133", "22134"),
+                     when = "2020-01-01")
+  cities <- city_convert(city, "2020-01-01", "2024-01-01") |>
+    vctrs::list_unchop() |>
+    vctrs::vec_unique()
+  expect_equal(city_code(cities), "22138")
+
+  city <- parse_city("22135",
+                     when = "2020-01-01")
+  cities <- city_convert(city, "2020-01-01", "2024-01-01")
+  expect_equal(city_code(cities[[1]]), c("22138", "22139"))
 })

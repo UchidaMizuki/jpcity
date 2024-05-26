@@ -76,11 +76,12 @@ read_absorption_separation <- function(file) {
     relocate(city_code) |>
     mutate(pattern_city = str_glue("(\\((({city_name_kana})、)?({city_code})\\))"),
            pattern_city = case_when(city_name == "上九一色村" ~
-                                      str_glue("{city_name}{pattern_city}(大字梯及び古関|大字精進、本栖及び富士ヶ嶺)"),
+                                      str_glue("{city_name}{pattern_city}大字梯及び古関|大字精進、本栖及び富士ヶ嶺"),
 
                                     # 2024-01-01: Kita-ku, Hamamatsu City
                                     city_desig_name == "浜松市" & city_name == "北区" ~
                                       str_glue("{city_name}{pattern_city}(\\((三方原地区/初生町、三方原町、東三方町、豊岡町、三幸町、大原町、根洗町|三方原地区以外)\\))?"),
+
                                     .default = str_glue("({pref_name})?({city_desig_name})?{city_name}{pattern_city}?")),
            pattern_city = str_glue("^{pattern_city}$")) |>
     nest(.by = c(date, event),
