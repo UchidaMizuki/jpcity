@@ -1,81 +1,29 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-  <url>
-    <loc>https://uchidamizuki.github.io/jpcity/404.html</loc>
-  </url>
-  <url>
-    <loc>https://uchidamizuki.github.io/jpcity/LICENSE-text.html</loc>
-  </url>
-  <url>
-    <loc>https://uchidamizuki.github.io/jpcity/LICENSE.html</loc>
-  </url>
-  <url>
-    <loc>https://uchidamizuki.github.io/jpcity/README-ja.html</loc>
-  </url>
-  <url>
-    <loc>https://uchidamizuki.github.io/jpcity/authors.html</loc>
-  </url>
-  <url>
-    <loc>https://uchidamizuki.github.io/jpcity/index.html</loc>
-  </url>
-  <url>
-    <loc>https://uchidamizuki.github.io/jpcity/news/index.html</loc>
-  </url>
-  <url>
-    <loc>https://uchidamizuki.github.io/jpcity/reference/city_code.html</loc>
-  </url>
-  <url>
-    <loc>https://uchidamizuki.github.io/jpcity/reference/city_convert.html</loc>
-  </url>
-  <url>
-    <loc>https://uchidamizuki.github.io/jpcity/reference/city_data.html</loc>
-  </url>
-  <url>
-    <loc>https://uchidamizuki.github.io/jpcity/reference/city_desig_merge.html</loc>
-  </url>
-  <url>
-    <loc>https://uchidamizuki.github.io/jpcity/reference/city_desig_split.html</loc>
-  </url>
-  <url>
-    <loc>https://uchidamizuki.github.io/jpcity/reference/city_interval.html</loc>
-  </url>
-  <url>
-    <loc>https://uchidamizuki.github.io/jpcity/reference/city_name.html</loc>
-  </url>
-  <url>
-    <loc>https://uchidamizuki.github.io/jpcity/reference/city_to_pref.html</loc>
-  </url>
-  <url>
-    <loc>https://uchidamizuki.github.io/jpcity/reference/find_city.html</loc>
-  </url>
-  <url>
-    <loc>https://uchidamizuki.github.io/jpcity/reference/get_city.html</loc>
-  </url>
-  <url>
-    <loc>https://uchidamizuki.github.io/jpcity/reference/index.html</loc>
-  </url>
-  <url>
-    <loc>https://uchidamizuki.github.io/jpcity/reference/is_city.html</loc>
-  </url>
-  <url>
-    <loc>https://uchidamizuki.github.io/jpcity/reference/is_pref.html</loc>
-  </url>
-  <url>
-    <loc>https://uchidamizuki.github.io/jpcity/reference/jpcity-package.html</loc>
-  </url>
-  <url>
-    <loc>https://uchidamizuki.github.io/jpcity/reference/parse_city.html</loc>
-  </url>
-  <url>
-    <loc>https://uchidamizuki.github.io/jpcity/reference/parse_pref.html</loc>
-  </url>
-  <url>
-    <loc>https://uchidamizuki.github.io/jpcity/reference/pref_code.html</loc>
-  </url>
-  <url>
-    <loc>https://uchidamizuki.github.io/jpcity/reference/pref_data.html</loc>
-  </url>
-  <url>
-    <loc>https://uchidamizuki.github.io/jpcity/reference/pref_name.html</loc>
-  </url>
+<urlset xmlns = 'http://www.sitemaps.org/schemas/sitemap/0.9'>
+<url><loc>https://uchidamizuki.github.io/jpcity/404.html</loc></url>
+<url><loc>https://uchidamizuki.github.io/jpcity/LICENSE-text.html</loc></url>
+<url><loc>https://uchidamizuki.github.io/jpcity/LICENSE.html</loc></url>
+<url><loc>https://uchidamizuki.github.io/jpcity/README-ja.html</loc></url>
+<url><loc>https://uchidamizuki.github.io/jpcity/authors.html</loc></url>
+<url><loc>https://uchidamizuki.github.io/jpcity/index.html</loc></url>
+<url><loc>https://uchidamizuki.github.io/jpcity/news/index.html</loc></url>
+<url><loc>https://uchidamizuki.github.io/jpcity/reference/city_code.html</loc></url>
+<url><loc>https://uchidamizuki.github.io/jpcity/reference/city_convert.html</loc></url>
+<url><loc>https://uchidamizuki.github.io/jpcity/reference/city_data.html</loc></url>
+<url><loc>https://uchidamizuki.github.io/jpcity/reference/city_desig_merge.html</loc></url>
+<url><loc>https://uchidamizuki.github.io/jpcity/reference/city_desig_split.html</loc></url>
+<url><loc>https://uchidamizuki.github.io/jpcity/reference/city_interval.html</loc></url>
+<url><loc>https://uchidamizuki.github.io/jpcity/reference/city_name.html</loc></url>
+<url><loc>https://uchidamizuki.github.io/jpcity/reference/city_to_pref.html</loc></url>
+<url><loc>https://uchidamizuki.github.io/jpcity/reference/find_city.html</loc></url>
+<url><loc>https://uchidamizuki.github.io/jpcity/reference/get_city.html</loc></url>
+<url><loc>https://uchidamizuki.github.io/jpcity/reference/index.html</loc></url>
+<url><loc>https://uchidamizuki.github.io/jpcity/reference/is_city.html</loc></url>
+<url><loc>https://uchidamizuki.github.io/jpcity/reference/is_pref.html</loc></url>
+<url><loc>https://uchidamizuki.github.io/jpcity/reference/jpcity-package.html</loc></url>
+<url><loc>https://uchidamizuki.github.io/jpcity/reference/parse_city.html</loc></url>
+<url><loc>https://uchidamizuki.github.io/jpcity/reference/parse_pref.html</loc></url>
+<url><loc>https://uchidamizuki.github.io/jpcity/reference/pref_code.html</loc></url>
+<url><loc>https://uchidamizuki.github.io/jpcity/reference/pref_data.html</loc></url>
+<url><loc>https://uchidamizuki.github.io/jpcity/reference/pref_name.html</loc></url>
 </urlset>
+
