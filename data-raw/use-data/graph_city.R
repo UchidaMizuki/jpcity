@@ -179,7 +179,9 @@ get_graph_city <- function(interval_city, areacode_start, areacode_end, absorpti
               .by = city_code)
 
   nodes_city <- nodes_city |>
-    select(!c(ancestors, descendants))
+    select(!c(ancestors, descendants)) |>
+    mutate(across(c(city_desig_name, city_desig_name_kana, city_name, city_name_kana),
+                  \(x) replace_na(x, "")))
 
   list(graph_city = graph_city,
        interval_city = interval_city,
