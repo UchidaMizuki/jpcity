@@ -12,7 +12,7 @@ get_city_desig_code <- function(graph_city) {
                                           city_desig_name_kana))
 
   city_desig_code <- city_code |>
-    filter(city_code == "13100" | !is.na(city_desig_name) & is.na(city_name)) |>
+    filter(city_code == "13100" | city_desig_name != "" & city_name == "") |>
     select(!c(city_name, city_name_kana))
 
   city_code |>

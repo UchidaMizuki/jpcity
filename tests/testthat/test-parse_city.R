@@ -23,3 +23,20 @@ test_that("vctrs::vec_detect_complete() works in jpcity_city (#5)", {
   city <- jpcity::parse_city("01202", "2020-10-01")
   expect_true(vctrs::vec_detect_complete(city))
 })
+
+test_that("jpcity::city_desig_merge() works (#7)", {
+  city <- jpcity::parse_city("01101") |>
+    jpcity::city_desig_merge()
+
+  expect_equal(jpcity::city_code(city), "01100")
+
+  city <- jpcity::parse_city("13101") |>
+    jpcity::city_desig_merge()
+
+  expect_equal(jpcity::city_code(city), "13101")
+
+  city <- jpcity::parse_city("13101") |>
+    jpcity::city_desig_merge(merge_tokyo = TRUE)
+
+  expect_equal(jpcity::city_code(city), "13100")
+})
