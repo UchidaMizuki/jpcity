@@ -74,3 +74,30 @@ city_desig_split <- function(city,
                        by = "key") |>
     dplyr::pull("val")
 }
+
+#' Check if a city is a designated city or a ward of a designated city
+#'
+#' @param x A `jpcity_city` object.
+#' @param type A character vector of city types, `"city"` or `"ward"`.
+#' By default, `"city"`.
+#'
+#' @return A logical vector.
+#'
+#' @export
+is_city_desig <- function(x,
+                          type = "city") {
+  type <- arg_match(type, c("city", "ward"),
+                    multiple = TRUE)
+
+  city_code <- NULL
+  if ("city" %in% type) {
+    city_code <- c(city_code,
+                   city_desig_code$city_desig_code)
+  }
+  if ("ward" %in% type) {
+    city_code <- c(city_code,
+                   setdiff(city_desig_code$city_code, city_desig_code$city_desig_code))
+  }
+
+  city_code(x) %in% city_code
+}
