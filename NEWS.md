@@ -1,3 +1,8 @@
+# jpcity 0.3.0
+
+* Change internal representation of `jpcity_city` object to not use `NA`. This allows `tidyr::drop_na()` (`vctrs::vec_detect_complete()`) to work correctly.
+* Add `is_city_desig()` to check if a city is a designated city.
+
 # jpcity 0.2.1
 
 * Fix bug for raw data of Kamikuishiki Village that occurred in version 0.2.0.
