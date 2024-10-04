@@ -23,7 +23,7 @@
 
     <a class="navbar-brand me-2" href="index.html">jpcity</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.2.1.9000</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.3.0</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -94,9 +94,8 @@
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">city</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/parse_city.html">parse_city</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"13101"</span>, <span class="st">"27101"</span>, <span class="st">"23101"</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="co">#&gt; Guessing the interval to be 1970-04-01 JST--1989-02-12 JST.</span></span>
-<span><span class="co">#&gt; ℹ You can override using `when` argument.</span></span></code></pre></div>
-<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span></span>
+<span><span class="co">#&gt; ℹ You can override using `when` argument.</span></span>
+<span></span>
 <span><span class="co"># Override the interval using `when` argument</span></span>
 <span><span class="va">city</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/parse_city.html">parse_city</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"13101"</span>, <span class="st">"27101"</span>, <span class="st">"23101"</span><span class="op">)</span>,</span>
 <span>                   when <span class="op">=</span> <span class="st">"1989-02-12"</span><span class="op">)</span></span>
@@ -112,9 +111,8 @@
 <span><span class="co">#&gt;   city_name_kana</span></span>
 <span><span class="co">#&gt; 1       ちよだく</span></span>
 <span><span class="co">#&gt; 2         きたく</span></span>
-<span><span class="co">#&gt; 3       ちくさく</span></span></code></pre></div>
-<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span></span>
+<span><span class="co">#&gt; 3       ちくさく</span></span>
+<span></span>
 <span><span class="fu">tibble</span><span class="op">(</span>city <span class="op">=</span> <span class="va">city</span>,</span>
 <span>       pref_name <span class="op">=</span> <span class="fu"><a href="reference/pref_name.html">pref_name</a></span><span class="op">(</span><span class="va">city</span><span class="op">)</span>,</span>
 <span>       city_name <span class="op">=</span> <span class="fu"><a href="reference/city_name.html">city_name</a></span><span class="op">(</span><span class="va">city</span><span class="op">)</span>,</span>
@@ -130,7 +128,7 @@
 <div class="section level3">
 <h3 id="convert-to-city-codes-at-a-different-point-in-time">Convert to city codes at a different point in time<a class="anchor" aria-label="anchor" href="#convert-to-city-codes-at-a-different-point-in-time"></a>
 </h3>
-<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">city</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/parse_city.html">parse_city</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"13101"</span>, <span class="st">"27101"</span>, <span class="st">"23101"</span><span class="op">)</span>,</span>
 <span>                   when <span class="op">=</span> <span class="st">"1980-01-01"</span><span class="op">)</span></span>
 <span><span class="fu">tibble</span><span class="op">(</span>city_from <span class="op">=</span> <span class="va">city</span>,</span>
@@ -143,9 +141,8 @@
 <span><span class="co">#&gt;   &lt;city&gt;                       &lt;city&gt;                      </span></span>
 <span><span class="co">#&gt; 1 13101 [東京都千代田区]       13101 [東京都千代田区]      </span></span>
 <span><span class="co">#&gt; 2 27101 [大阪府大阪市北区]     27127 [大阪府大阪市北区]    </span></span>
-<span><span class="co">#&gt; 3 23101 [愛知県名古屋市千種区] 23101 [愛知県名古屋市千種区]</span></span></code></pre></div>
-<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span></span>
+<span><span class="co">#&gt; 3 23101 [愛知県名古屋市千種区] 23101 [愛知県名古屋市千種区]</span></span>
+<span></span>
 <span><span class="va">city</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/parse_city.html">parse_city</a></span><span class="op">(</span><span class="st">"15100"</span>,</span>
 <span>                   when <span class="op">=</span> <span class="st">"2020-01-01"</span><span class="op">)</span></span>
 <span><span class="fu">tibble</span><span class="op">(</span>city_from <span class="op">=</span> <span class="va">city</span>,</span>
@@ -175,7 +172,7 @@
 <div class="section level3">
 <h3 id="combine-wards-of-designated-cities-or-divide-them-into-wards">Combine wards of designated cities or divide them into wards<a class="anchor" aria-label="anchor" href="#combine-wards-of-designated-cities-or-divide-them-into-wards"></a>
 </h3>
-<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">city</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/parse_city.html">parse_city</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"13101"</span>, <span class="st">"27101"</span>, <span class="st">"23101"</span><span class="op">)</span>,</span>
 <span>                   when <span class="op">=</span> <span class="st">"1980-01-01"</span><span class="op">)</span></span>
 <span><span class="fu">tibble</span><span class="op">(</span>city <span class="op">=</span> <span class="va">city</span>,</span>
@@ -192,7 +189,7 @@
 <div class="section level3">
 <h3 id="get-city-codes-at-a-specific-point-in-time">Get city codes at a specific point in time<a class="anchor" aria-label="anchor" href="#get-city-codes-at-a-specific-point-in-time"></a>
 </h3>
-<div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu">tibble</span><span class="op">(</span>city <span class="op">=</span> <span class="fu"><a href="reference/get_city.html">get_city</a></span><span class="op">(</span><span class="st">"2020-01-01"</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="co">#&gt; # A tibble: 1,923 × 1</span></span>
 <span><span class="co">#&gt;    city                      </span></span>
@@ -207,9 +204,8 @@
 <span><span class="co">#&gt;  8 01107 [北海道札幌市西区]  </span></span>
 <span><span class="co">#&gt;  9 01108 [北海道札幌市厚別区]</span></span>
 <span><span class="co">#&gt; 10 01109 [北海道札幌市手稲区]</span></span>
-<span><span class="co">#&gt; # ℹ 1,913 more rows</span></span></code></pre></div>
-<div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span></span>
+<span><span class="co">#&gt; # ℹ 1,913 more rows</span></span>
+<span></span>
 <span><span class="fu">tibble</span><span class="op">(</span>city <span class="op">=</span> <span class="fu"><a href="reference/get_city.html">get_city</a></span><span class="op">(</span><span class="st">"1970-04-01"</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="co">#&gt; # A tibble: 3,376 × 1</span></span>
 <span><span class="co">#&gt;    city                  </span></span>
@@ -229,7 +225,7 @@
 <div class="section level3">
 <h3 id="find-city-codes-using-the-name-of-the-prefecture-or-city">Find city codes using the name of the prefecture or city<a class="anchor" aria-label="anchor" href="#find-city-codes-using-the-name-of-the-prefecture-or-city"></a>
 </h3>
-<div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="reference/find_city.html">find_city</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"東京都"</span>, <span class="st">"新宿区"</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="co">#&gt; &lt;city[1]&gt; Interval: 1970-04-01--Inf</span></span>
 <span><span class="co">#&gt; [1] 13104</span></span>
@@ -292,7 +288,7 @@
 </div>
 
 <div class="pkgdown-footer-right">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.1.0.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.1.1.</p>
 </div>
 
     </footer>
