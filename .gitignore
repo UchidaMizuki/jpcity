@@ -2,3 +2,8 @@
 .Rhistory
 .RData
 .Ruserdata
+
+# Derived offline from the tracked data-raw/lod/data/StandardAreaCode.rds
+# by data-raw/lod/use-data.R.
+data-raw/lod/data/standard_area_code.rds
+data-raw/lod/data/area_data.rds

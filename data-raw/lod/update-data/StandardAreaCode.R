@@ -2,10 +2,10 @@ source("data-raw/setup.R")
 
 # update-data-lod-StandardAreaCode ----------------------------------------
 
-download_lod_StandardAreaCode <- function() {
-  url_estat_lod <- "http://data.e-stat.go.jp/lod/sparql/alldata/query"
+download_lod_StandardAreaCode <- function(page_size = 10000) {
+  url_estat_lod <- "https://data.e-stat.go.jp/lod/sparql/alldata/query"
 
-  query <- '
+  query_base <- '
   PREFIX sacs: <http://data.e-stat.go.jp/lod/terms/sacs#>
   PREFIX sac: <http://data.e-stat.go.jp/lod/sac/>
   PREFIX dcterms: <http://purl.org/dc/terms/>
@@ -26,20 +26,48 @@ download_lod_StandardAreaCode <- function() {
     OPTIONAL { ?code sacs:hasPart ?hasPart }
     OPTIONAL { ?code sacs:previousMunicipality ?previousMunicipality } # 当該コードの変更前の期間つき標準地域コードのリソース
     OPTIONAL { ?code sacs:succeedingMunicipality ?succeedingMunicipality } # 当該コードの変更後の期間つき標準地域コードのリソース
-    OPTIONAL { ?code org:changedBy ?changeBy }
+    OPTIONAL { ?code org:changedBy ?changedBy }
     OPTIONAL { ?code org:resultedFrom ?resultedFrom }
-    OPTIONAL { ?code org:resultedFrom ?fromEvent }
     OPTIONAL { ?code sacs:prefecturalCapitalCode ?prefecturalCapitalCode } # 都道府県の県庁所在地を指す期間つき標準地域コードのリソース（都道府県のみ）
     OPTIONAL { ?code sacs:districtOfSubPrefecture ?districtOfSubPrefecture } # 支庁・振興局等内郡（北海道）の名称
     OPTIONAL { ?code sacs:checkDigit ?checkDigit } # 標準地域コードのチェックデジットコード（検査数字）
-    OPTIONAL { ?code sacs:sacs:prefectureLabel ?prefectureLabel } # 所属する都道府県
+    OPTIONAL { ?code sacs:prefectureLabel ?prefectureLabel } # 所属する都道府県
   }
   ORDER BY ?code
   '
 
-  request(url_estat_lod) |>
-    req_url_query(query = query) |>
-    req_headers(Accept = "application/sparql-results+json") |>
-    req_perform() |>
-    resp_body_json()
+  fetch_page <- function(offset) {
+    request(url_estat_lod) |>
+      req_url_query(
+        query = paste0(query_base, "LIMIT ", page_size, " OFFSET ", offset)
+      ) |>
+      req_headers(Accept = "application/sparql-results+json") |>
+      req_user_agent("jpcity (https://github.com/UchidaMizuki/jpcity)") |>
+      req_retry(max_tries = 5) |>
+      req_perform() |>
+      resp_body_json()
+  }
+
+  # The e-Stat SPARQL endpoint caps the number of rows returned per request,
+  # so page through the result set with LIMIT/OFFSET until a short page is
+  # returned (signalling the last page).
+  result <- NULL
+  bindings <- list()
+  offset <- 0
+  repeat {
+    page <- fetch_page(offset)
+    page_bindings <- page$results$bindings
+
+    bindings <- c(bindings, page_bindings)
+    if (is.null(result)) {
+      result <- page
+    }
+    if (length(page_bindings) < page_size) {
+      break
+    }
+    offset <- offset + page_size
+  }
+
+  result$results$bindings <- bindings
+  result
 }
