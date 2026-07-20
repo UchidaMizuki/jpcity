@@ -1,3 +1,7 @@
+# jpcity (development version)
+
+* The `city_code`/`graph_city`-based implementation (`parse_city()`, `city_convert()`, `city_desig_merge()`/`city_desig_split()`, `is_city_desig()`, `get_city()`, `find_city()`, `city_code()`, `city_data()`, `city_name()`, `city_interval()`, `city_to_pref()`, `is_city()`) has been renamed with a `_legacy` suffix ahead of a rewrite on the new e-Stat LOD data model.
+
 # jpcity 0.3.0
 
 * Change internal representation of `jpcity_city` object to not use `NA`. This allows `tidyr::drop_na()` (`vctrs::vec_detect_complete()`) to work correctly.

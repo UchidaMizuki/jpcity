@@ -1,66 +1,11 @@
-tz_jst <- "Asia/Tokyo"
-city_empty <- city(list(city_code = character(),
-                        pref_name = character(),
-                        city_desig_name = character(),
-                        city_desig_name_kana = character(),
-                        city_name = character(),
-                        city_name_kana = character()),
-                   interval = lubridate::interval(tzone = tz_jst))
-
-assert_city <- function(city) {
-  name <- as_name(enquo(city))
-
-  if (!is_city(city)) {
-    cli::cli_abort("{.arg {name}} must inherit from {.cls city}.")
-  }
-}
-
 assert_city_or_pref <- function(city) {
   name <- as_name(enquo(city))
 
-  if (!is_city(city) && !is_pref(city)) {
-    cli::cli_abort("{.arg {name}} must inherit from {.cls jpcity_city} or {.cls jpcity_pref}.")
+  if (!is_city_legacy(city) && !is_pref(city)) {
+    cli::cli_abort(
+      "{.arg {name}} must inherit from {.cls jpcity_city} or {.cls jpcity_pref}."
+    )
   }
-}
-
-intersect_interval <- function(interval,
-                               when = FALSE) {
-  size_interval <- vec_size(interval)
-  out <- if (size_interval == 0L) {
-    vec_init(interval)
-  } else if (size_interval == 1L) {
-    interval
-  } else if (all(is.na(interval))) {
-    lubridate::NA_Date_ %--% lubridate::NA_Date_
-  } else {
-    start <- max(lubridate::int_start(interval),
-                 na.rm = TRUE)
-    end <- min(lubridate::int_end(interval),
-               na.rm = TRUE)
-
-    if (is.finite(start) && start <= end) {
-      start %--% end
-    } else {
-      lubridate::NA_Date_ %--% lubridate::NA_Date_
-    }
-  }
-  if (when && is.infinite(lubridate::int_end(out))) {
-    lubridate::int_end(out) <- lubridate::int_end(graph_city$interval_city)
-  }
-  out
-}
-
-parse_ymd <- function(when) {
-  if (is.null(when)) {
-    cli::cli_abort("{.arg when} must not be NULL.")
-  } else if (is.character(when)) {
-    when <- lubridate::ymd(when,
-                           tz = tz_jst)
-  }
-  if (!when %within% graph_city$interval_city) {
-    cli::cli_abort("{.arg when} must be within {.val {graph_city$interval_city}}")
-  }
-  when
 }
 
 extract_pref_name <- function(string) {

@@ -15,12 +15,12 @@ coverage](https://codecov.io/gh/UchidaMizuki/jpcity/branch/main/graph/badge.svg)
 jpcityは，日本の市区町村コードの読み取り・変換を行うためのRパッケージです．
 このパッケージは，以下のような機能を提供しています．
 
-- 市区町村コードの読み取り：`parse_city()`
-  - `city_name()`や`pref_name()`を組み合わせることで市区町村名や都道府県名を取得可能
-- 異なる時点の市区町村コードへの変換（廃置分合処理）：`city_convert()`
-- 政令指定都市の区の集約・区への分割：`city_desig_merge()`，`city_desig_split()`
-- 特定時点の市区町村コードの取得：`get_city()`
-- 都道府県・市区町村名を用いた市区町村コードの検索：`find_city()`
+- 市区町村コードの読み取り：`parse_city_legacy()`
+  - `city_name_legacy()`や`pref_name()`を組み合わせることで市区町村名や都道府県名を取得可能
+- 異なる時点の市区町村コードへの変換（廃置分合処理）：`city_convert_legacy()`
+- 政令指定都市の区の集約・区への分割：`city_desig_merge_legacy()`，`city_desig_split_legacy()`
+- 特定時点の市区町村コードの取得：`get_city_legacy()`
+- 都道府県・市区町村名を用いた市区町村コードの検索：`find_city_legacy()`
 
 ## Installation
 
@@ -45,15 +45,12 @@ library(tidyverse)
 ### 市区町村コードの読み取り
 
 ``` r
-city <- parse_city(c("13101", "27101", "23101"))
+city <- parse_city_legacy(c("13101", "27101", "23101"))
 #> Guessing the interval to be 1970-04-01 JST--1989-02-12 JST.
 #> ℹ You can override using `when` argument.
-```
-
-``` r
 
 # Override the interval using `when` argument
-city <- parse_city(c("13101", "27101", "23101"),
+city <- parse_city_legacy(c("13101", "27101", "23101"),
                    when = "1980-01-01")
 city
 #> <city[3]> Interval: 1970-04-01--1989-02-12
@@ -61,37 +58,34 @@ city
 #> 
 #> Cities:
 #>   city_code pref_name city_desig_name city_desig_name_kana city_name
-#> 1     13101    東京都            <NA>                 <NA>  千代田区
+#> 1     13101    東京都                                       千代田区
 #> 2     27101    大阪府          大阪市           おおさかし      北区
 #> 3     23101    愛知県        名古屋市             なごやし    千種区
 #>   city_name_kana
 #> 1       ちよだく
 #> 2         きたく
 #> 3       ちくさく
-```
-
-``` r
 
 tibble(city = city,
        pref_name = pref_name(city),
-       city_name = city_name(city),
-       city_name_kana = city_name(city,
+       city_name_legacy = city_name_legacy(city),
+       city_name_kana = city_name_legacy(city,
                                   kana = TRUE))
 #> # A tibble: 3 × 4
-#>   city                         pref_name city_name      city_name_kana  
-#>   <city>                       <chr>     <chr>          <chr>           
-#> 1 13101 [東京都千代田区]       東京都    千代田区       ちよだく        
-#> 2 27101 [大阪府大阪市北区]     大阪府    大阪市北区     おおさかしきたく
-#> 3 23101 [愛知県名古屋市千種区] 愛知県    名古屋市千種区 なごやしちくさく
+#>   city                         pref_name city_name_legacy city_name_kana  
+#>   <city>                       <chr>     <chr>            <chr>           
+#> 1 13101 [東京都千代田区]       東京都    千代田区         ちよだく        
+#> 2 27101 [大阪府大阪市北区]     大阪府    大阪市北区       おおさかしきたく
+#> 3 23101 [愛知県名古屋市千種区] 愛知県    名古屋市千種区   なごやしちくさく
 ```
 
 ### 異なる時点の市区町村コードへの変換（廃置分合処理）
 
 ``` r
-city <- parse_city(c("13101", "27101", "23101"),
+city <- parse_city_legacy(c("13101", "27101", "23101"),
                    when = "1980-01-01")
 tibble(city_from = city,
-       city_to = city_convert(city,
+       city_to = city_convert_legacy(city,
                               from = "1980-01-01",
                               to = "2020-01-01")) |> 
   unnest(city_to)
@@ -101,14 +95,11 @@ tibble(city_from = city,
 #> 1 13101 [東京都千代田区]       13101 [東京都千代田区]      
 #> 2 27101 [大阪府大阪市北区]     27127 [大阪府大阪市北区]    
 #> 3 23101 [愛知県名古屋市千種区] 23101 [愛知県名古屋市千種区]
-```
 
-``` r
-
-city <- parse_city("15100",
+city <- parse_city_legacy("15100",
                    when = "2020-01-01")
 tibble(city_from = city,
-       city_to = city_convert(city,
+       city_to = city_convert_legacy(city,
                               from = "2020-01-01",
                               to = "1970-04-01")) |> 
   unnest(city_to)
@@ -135,11 +126,11 @@ tibble(city_from = city,
 ### 政令指定都市の区の集約・区への分割
 
 ``` r
-city <- parse_city(c("13101", "27101", "23101"),
+city <- parse_city_legacy(c("13101", "27101", "23101"),
                    when = "1980-01-01")
 tibble(city = city,
-       city_desig = city_desig_merge(city),
-       city_desig_merge_tokyo = city_desig_merge(city,
+       city_desig = city_desig_merge_legacy(city),
+       city_desig_merge_tokyo = city_desig_merge_legacy(city,
                                                  merge_tokyo = TRUE))
 #> # A tibble: 3 × 3
 #>   city                         city_desig             city_desig_merge_tokyo
@@ -152,7 +143,7 @@ tibble(city = city,
 ### 特定時点の市区町村コードの取得
 
 ``` r
-tibble(city = get_city("2020-01-01"))
+tibble(city = get_city_legacy("2020-01-01"))
 #> # A tibble: 1,923 × 1
 #>    city                      
 #>    <city>                    
@@ -167,11 +158,8 @@ tibble(city = get_city("2020-01-01"))
 #>  9 01108 [北海道札幌市厚別区]
 #> 10 01109 [北海道札幌市手稲区]
 #> # ℹ 1,913 more rows
-```
 
-``` r
-
-tibble(city = get_city("1970-04-01"))
+tibble(city = get_city_legacy("1970-04-01"))
 #> # A tibble: 3,376 × 1
 #>    city                  
 #>    <city>                
@@ -191,13 +179,13 @@ tibble(city = get_city("1970-04-01"))
 ### 都道府県・市区町村名を用いた市区町村コードの検索
 
 ``` r
-find_city(c("東京都", "新宿区"))
+find_city_legacy(c("東京都", "新宿区"))
 #> <city[1]> Interval: 1970-04-01--Inf
 #> [1] 13104
 #> 
 #> Cities:
 #>   city_code pref_name city_desig_name city_desig_name_kana city_name
-#> 1     13104    東京都            <NA>                 <NA>    新宿区
+#> 1     13104    東京都                                         新宿区
 #>   city_name_kana
 #> 1   しんじゅくく
 ```
