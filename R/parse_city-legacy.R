@@ -12,7 +12,7 @@ parse_city_legacy <- function(x, when = NULL, na = c("", "NA")) {
   city_code <- check_city_code_legacy(x, na = na)
 
   if (is.null(when)) {
-    interval <- graph_city$interval_city_code |>
+    interval <- graph_city_legacy$interval_city_code |>
       dplyr::filter(.data$city_code %in% .env$city_code)
     interval <- check_city_interval_legacy(
       city_code = interval$city_code,
@@ -29,7 +29,7 @@ parse_city_legacy <- function(x, when = NULL, na = c("", "NA")) {
     }
   }
 
-  data <- graph_city$nodes_city |>
+  data <- graph_city_legacy$nodes_city |>
     dplyr::filter(
       !is.na(lubridate::intersect(.data$interval, .env$interval)),
       .data$city_code %in% .env$city_code

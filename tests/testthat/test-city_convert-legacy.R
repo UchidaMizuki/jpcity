@@ -67,7 +67,7 @@ test_that("city_convert_legacy-02", {
   out <- city_convert_legacy(
     city,
     "2020-10-01",
-    lubridate::int_end(graph_city$interval_city) - lubridate::days(1L)
+    lubridate::int_end(graph_city_legacy$interval_city) - lubridate::days(1L)
   )
   out <- out[[1L]]
   expect_length(out[[1L]], 1L)

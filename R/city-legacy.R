@@ -64,8 +64,8 @@ check_city_interval_legacy <- function(
 add_city_data_legacy <- function(data) {
   data <- as.data.frame(data)
   vec_slice(
-    graph_city$nodes_city,
-    vec_match(data, graph_city$nodes_city[names2(data)])
+    graph_city_legacy$nodes_city,
+    vec_match(data, graph_city_legacy$nodes_city[names2(data)])
   )
 }
 
@@ -116,7 +116,7 @@ c.jpcity_city <- function(...) {
 #'
 #' @export
 find_city_legacy <- function(patterns, when = NULL) {
-  out <- graph_city$nodes_city |>
+  out <- graph_city_legacy$nodes_city |>
     dplyr::mutate(
       string_city = stringr::str_glue(
         "{pref_name}{city_desig_name}{city_name}{city_desig_name_kana}{city_name_kana}",
@@ -158,9 +158,9 @@ find_city_legacy <- function(patterns, when = NULL) {
 get_city_legacy <- function(when) {
   when <- parse_ymd_legacy(when)
 
-  out <- graph_city$nodes_city |>
+  out <- graph_city_legacy$nodes_city |>
     dplyr::filter(
-      !.data$city_code %in% city_desig_code,
+      !.data$city_code %in% city_desig_code_legacy,
       when %within% .data$interval
     ) |>
     dplyr::arrange(.data$city_code)

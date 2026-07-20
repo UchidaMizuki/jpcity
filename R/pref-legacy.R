@@ -1,4 +1,4 @@
-pref <- function(data) {
+pref_legacy <- function(data) {
   new_rcrd(data[c("pref_code", "pref_name")], class = "jpcity_pref")
 }
 
@@ -9,7 +9,7 @@ pref <- function(data) {
 #' @return A data frame.
 #'
 #' @export
-pref_data <- function(pref) {
+pref_data_legacy <- function(pref) {
   data_frame(
     pref_code = field(pref, "pref_code"),
     pref_name = field(pref, "pref_name")
@@ -23,7 +23,7 @@ pref_data <- function(pref) {
 #' @return `TRUE` if the object inherits from the `jpcity_pref` class.
 #'
 #' @export
-is_pref <- function(x) {
+is_pref_legacy <- function(x) {
   inherits_any(x, "jpcity_pref")
 }
 
@@ -34,13 +34,13 @@ is_pref <- function(x) {
 #' @return A integer vector of prefecture codes.
 #'
 #' @export
-pref_code <- function(city) {
-  assert_city_or_pref(city)
+pref_code_legacy <- function(city) {
+  assert_city_or_pref_legacy(city)
   if (is_city_legacy(city)) {
     city_code_legacy(city) |>
       stringr::str_extract("^\\d{2}") |>
       as.integer()
-  } else if (is_pref(city)) {
+  } else if (is_pref_legacy(city)) {
     field(city, "pref_code")
   }
 }
@@ -52,7 +52,7 @@ pref_code <- function(city) {
 #' @return A `character` vector of prefecture names.
 #'
 #' @export
-pref_name <- function(city) {
-  assert_city_or_pref(city)
+pref_name_legacy <- function(city) {
+  assert_city_or_pref_legacy(city)
   field(city, "pref_name")
 }

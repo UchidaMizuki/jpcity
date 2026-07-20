@@ -16,7 +16,7 @@ jpcityは，日本の市区町村コードの読み取り・変換を行うた�
 このパッケージは，以下のような機能を提供しています．
 
 - 市区町村コードの読み取り：`parse_city_legacy()`
-  - `city_name_legacy()`や`pref_name()`を組み合わせることで市区町村名や都道府県名を取得可能
+  - `city_name_legacy()`や`pref_name_legacy()`を組み合わせることで市区町村名や都道府県名を取得可能
 - 異なる時点の市区町村コードへの変換（廃置分合処理）：`city_convert_legacy()`
 - 政令指定都市の区の集約・区への分割：`city_desig_merge_legacy()`，`city_desig_split_legacy()`
 - 特定時点の市区町村コードの取得：`get_city_legacy()`
@@ -67,7 +67,7 @@ city
 #> 3       ちくさく
 
 tibble(city = city,
-       pref_name = pref_name(city),
+       pref_name = pref_name_legacy(city),
        city_name_legacy = city_name_legacy(city),
        city_name_kana = city_name_legacy(city,
                                   kana = TRUE))

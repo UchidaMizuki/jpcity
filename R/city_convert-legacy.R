@@ -28,14 +28,14 @@ city_convert_legacy <- function(city, from, to) {
     add_city_data_legacy()
 
   if (from < to) {
-    relatives <- graph_city$descendants_city |>
+    relatives <- graph_city_legacy$descendants_city |>
       dplyr::filter(
         .data$node == .data$node_relatives |
           from <= lubridate::int_start(.data$interval),
         to %within% .data$interval
       )
   } else {
-    relatives <- graph_city$ancestors_city |>
+    relatives <- graph_city_legacy$ancestors_city |>
       dplyr::filter(
         .data$node == .data$node_relatives |
           from >= lubridate::int_end(.data$interval),
@@ -47,7 +47,7 @@ city_convert_legacy <- function(city, from, to) {
     dplyr::select(!"interval") |>
     dplyr::filter(.data$node %in% data$node) |>
     dplyr::left_join(
-      graph_city$nodes_city,
+      graph_city_legacy$nodes_city,
       by = dplyr::join_by("node_relatives" == "node")
     ) |>
     dplyr::select(!"node_relatives")

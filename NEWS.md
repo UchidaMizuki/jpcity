@@ -1,6 +1,7 @@
 # jpcity (development version)
 
 * The `city_code`/`graph_city`-based implementation (`parse_city()`, `city_convert()`, `city_desig_merge()`/`city_desig_split()`, `is_city_desig()`, `get_city()`, `find_city()`, `city_code()`, `city_data()`, `city_name()`, `city_interval()`, `city_to_pref()`, `is_city()`) has been renamed with a `_legacy` suffix ahead of a rewrite on the new e-Stat LOD data model.
+* The prefecture-related functions (`parse_pref()`, `pref_code()`, `pref_name()`, `pref_data()`, `is_pref()`) have likewise been renamed with a `_legacy` suffix.
 
 # jpcity 0.3.0
 

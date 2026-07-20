@@ -73,7 +73,7 @@ city_interval_legacy <- function(city, intersect = FALSE) {
   } else {
     city_data_legacy(city) |>
       dplyr::left_join(
-        graph_city$nodes_city,
+        graph_city_legacy$nodes_city,
         by = dplyr::join_by(
           "city_code",
           "pref_name",
@@ -96,5 +96,5 @@ city_interval_legacy <- function(city, intersect = FALSE) {
 #' @export
 city_to_pref_legacy <- function(city) {
   assert_city_legacy(city)
-  parse_pref(pref_code(city))
+  parse_pref_legacy(pref_code_legacy(city))
 }

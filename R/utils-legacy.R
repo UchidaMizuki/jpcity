@@ -38,7 +38,9 @@ intersect_interval_legacy <- function(interval, when = FALSE) {
     }
   }
   if (when && is.infinite(lubridate::int_end(out))) {
-    lubridate::int_end(out) <- lubridate::int_end(graph_city$interval_city)
+    lubridate::int_end(out) <- lubridate::int_end(
+      graph_city_legacy$interval_city
+    )
   }
   out
 }
@@ -49,10 +51,30 @@ parse_ymd_legacy <- function(when) {
   } else if (is.character(when)) {
     when <- lubridate::ymd(when, tz = tz_jst_legacy)
   }
-  if (!when %within% graph_city$interval_city) {
+  if (!when %within% graph_city_legacy$interval_city) {
     cli::cli_abort(
-      "{.arg when} must be within {.val {graph_city$interval_city}}"
+      "{.arg when} must be within {.val {graph_city_legacy$interval_city}}"
     )
   }
   when
+}
+
+assert_city_or_pref_legacy <- function(city) {
+  name <- as_name(enquo(city))
+
+  if (!is_city_legacy(city) && !is_pref_legacy(city)) {
+    cli::cli_abort(
+      "{.arg {name}} must inherit from {.cls jpcity_city} or {.cls jpcity_pref}."
+    )
+  }
+}
+
+extract_pref_name_legacy <- function(string) {
+  string |>
+    stringr::str_extract("[^[\\u90fd\\u9053\\u5e9c\\u770c]$]+")
+}
+
+quiet_as_integer_legacy <- function(x) {
+  purrr::quietly(as.integer)(x) |>
+    purrr::chuck("result")
 }

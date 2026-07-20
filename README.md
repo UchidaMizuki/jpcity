@@ -20,7 +20,7 @@ codes. This package provides the following features,
 
 - Read city codes: `parse_city_legacy()`.
   - city and prefecture names can be obtained by combining
-    `city_name_legacy()` and `pref_name()`.
+    `city_name_legacy()` and `pref_name_legacy()`.
 - Convert to city codes at a different point in time:
   `city_convert_legacy()`
 - Combine wards of designated cities or divide them into wards:
@@ -75,7 +75,7 @@ city
 #> 3       ちくさく
 
 tibble(city = city,
-       pref_name = pref_name(city),
+       pref_name = pref_name_legacy(city),
        city_name_legacy = city_name_legacy(city),
        city_name_kana = city_name_legacy(city,
                                   kana = TRUE))

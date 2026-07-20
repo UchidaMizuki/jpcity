@@ -6,7 +6,7 @@ format.jpcity_pref <- function(x, ...) {
 #' @export
 obj_print_footer.jpcity_pref <- function(x, ...) {
   cli::cat_line(c("", "Prefectures:"))
-  pref_data(x) |>
+  pref_data_legacy(x) |>
     vec_unique() |>
     print()
   invisible(x)

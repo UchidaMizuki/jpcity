@@ -15,7 +15,7 @@
 city_desig_merge_legacy <- function(city, merge_tokyo = FALSE) {
   city_code <- city_code_legacy(city)
 
-  city_desig_code <- city_desig_code |>
+  city_desig_code <- city_desig_code_legacy |>
     dplyr::filter(merge_tokyo | city_desig_code != "13100") |>
     dplyr::select(!"interval")
 
@@ -54,7 +54,7 @@ city_desig_merge_legacy <- function(city, merge_tokyo = FALSE) {
 city_desig_split_legacy <- function(city, split_tokyo = TRUE) {
   city_code <- city_code_legacy(city)
 
-  city_desig_code <- city_desig_code |>
+  city_desig_code <- city_desig_code_legacy |>
     dplyr::select(!"interval_desig") |>
     dplyr::filter(
       split_tokyo | city_desig_code != "13100",
@@ -94,12 +94,15 @@ is_city_desig_legacy <- function(x, type = "city") {
 
   city_code <- NULL
   if ("city" %in% type) {
-    city_code <- c(city_code, city_desig_code$city_desig_code)
+    city_code <- c(city_code, city_desig_code_legacy$city_desig_code)
   }
   if ("ward" %in% type) {
     city_code <- c(
       city_code,
-      setdiff(city_desig_code$city_code, city_desig_code$city_desig_code)
+      setdiff(
+        city_desig_code_legacy$city_code,
+        city_desig_code_legacy$city_desig_code
+      )
     )
   }
 

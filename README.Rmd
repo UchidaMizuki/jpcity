@@ -27,7 +27,7 @@ jpcity is an R package for reading and converting Japanese municipality codes.
 This package provides the following features,
 
 - Read city codes: `parse_city_legacy()`.
-  - city and prefecture names can be obtained by combining `city_name_legacy()` and `pref_name()`.
+  - city and prefecture names can be obtained by combining `city_name_legacy()` and `pref_name_legacy()`.
 - Convert to city codes at a different point in time: `city_convert_legacy()`
 - Combine wards of designated cities or divide them into wards: `city_desig_merge_legacy()`，`city_desig_split_legacy()`
 - Get city codes at a specific point in time: `get_city_legacy()`
@@ -64,7 +64,7 @@ city <- parse_city_legacy(c("13101", "27101", "23101"),
 city
 
 tibble(city = city,
-       pref_name = pref_name(city),
+       pref_name = pref_name_legacy(city),
        city_name_legacy = city_name_legacy(city),
        city_name_kana = city_name_legacy(city,
                                   kana = TRUE))
